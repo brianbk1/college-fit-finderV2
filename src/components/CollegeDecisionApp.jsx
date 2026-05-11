@@ -216,8 +216,6 @@ const CollegeDecisionApp = () => {
   }
 
   const fmtDollars = (v) => `$${v.toLocaleString()}`
-  const fmtStudents = (v) => `${v.toLocaleString()} students`
-  const fmtPct = (v) => `${v}%`
 
   const buildSearchCriteriaSummary = () => {
     const tags = []
