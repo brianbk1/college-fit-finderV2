@@ -73,6 +73,7 @@ const ToggleChip = ({ label, emoji, valueKey, values, onChange }) => {
 
 // ─── DUAL-HANDLE RANGE SLIDER (Zillow-style) ─────────────────
 const DualSlider = ({ label, minKey, maxKey, minVal, maxVal, step = 1, format, values, onChange }) => {
+  const [lastMoved, setLastMoved] = useState('max')
   const fmt = format || (v => v.toLocaleString())
   const lo = values[minKey]
   const hi = values[maxKey]
@@ -80,55 +81,64 @@ const DualSlider = ({ label, minKey, maxKey, minVal, maxVal, step = 1, format, v
 
   const handleMin = (e) => {
     const v = parseInt(e.target.value)
-    if (v <= hi - step) onChange(minKey, v)
+    if (v < hi) { onChange(minKey, v); setLastMoved('min') }
   }
   const handleMax = (e) => {
     const v = parseInt(e.target.value)
-    if (v >= lo + step) onChange(maxKey, v)
+    if (v > lo) { onChange(maxKey, v); setLastMoved('max') }
   }
 
-  const trackStyle = {
-    position: 'absolute', height: '6px', borderRadius: '3px', top: '50%', transform: 'translateY(-50%)',
-    left: `${pct(lo)}%`, width: `${pct(hi) - pct(lo)}%`, background: '#1E3A5F', pointerEvents: 'none'
-  }
   const sliderBase = {
-    position: 'absolute', width: '100%', height: '6px', appearance: 'none', WebkitAppearance: 'none',
-    background: 'transparent', outline: 'none', cursor: 'pointer', pointerEvents: 'auto',
-    top: '50%', transform: 'translateY(-50%)', margin: 0,
+    position: 'absolute', width: '100%', height: '100%',
+    appearance: 'none', WebkitAppearance: 'none',
+    background: 'transparent', outline: 'none', cursor: 'pointer',
+    top: 0, left: 0, margin: 0, padding: 0,
   }
 
   return (
     <div style={{ marginBottom: '24px' }}>
       <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', display: 'block', marginBottom: '10px' }}>{label}</label>
-      <div style={{ background: '#F0F4FF', borderRadius: '12px', padding: '16px', border: '1px solid #C8D6EC' }}>
+      <div style={{ background: '#F0F4FF', borderRadius: '12px', padding: '20px 16px 16px', border: '1px solid #C8D6EC' }}>
 
-        {/* Track + handles */}
-        <div style={{ position: 'relative', height: '36px', marginBottom: '14px' }}>
-          {/* Gray full track */}
-          <div style={{ position: 'absolute', height: '6px', borderRadius: '3px', top: '50%', transform: 'translateY(-50%)', left: 0, right: 0, background: '#D0DCF0' }} />
-          {/* Blue active track */}
-          <div style={trackStyle} />
-          {/* Min handle */}
-          <input type="range" min={minVal} max={maxVal} step={step} value={lo} onChange={handleMin}
-            style={{ ...sliderBase, zIndex: lo > maxVal - (maxVal - minVal) * 0.1 ? 5 : 4 }} />
-          {/* Max handle */}
-          <input type="range" min={minVal} max={maxVal} step={step} value={hi} onChange={handleMax}
-            style={{ ...sliderBase, zIndex: 5 }} />
-          <style>{`
-            input[type=range]::-webkit-slider-thumb {
-              -webkit-appearance: none; appearance: none;
-              width: 28px; height: 28px; border-radius: 50%;
-              background: white; border: 3px solid #1E3A5F;
-              box-shadow: 0 2px 6px rgba(30,58,95,0.25);
-              cursor: grab; transition: transform 0.1s;
-            }
-            input[type=range]:active::-webkit-slider-thumb { transform: scale(1.15); cursor: grabbing; }
-            input[type=range]::-moz-range-thumb {
-              width: 28px; height: 28px; border-radius: 50%;
-              background: white; border: 3px solid #1E3A5F;
-              box-shadow: 0 2px 6px rgba(30,58,95,0.25); cursor: grab;
-            }
-          `}</style>
+        <style>{`
+          .dual-slider-thumb::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 30px; height: 30px; border-radius: 50%;
+            background: white; border: 3px solid #1E3A5F;
+            box-shadow: 0 2px 8px rgba(30,58,95,0.3);
+            cursor: grab;
+          }
+          .dual-slider-thumb:active::-webkit-slider-thumb { cursor: grabbing; transform: scale(1.1); }
+          .dual-slider-thumb::-webkit-slider-runnable-track { background: transparent; }
+          .dual-slider-thumb::-moz-range-thumb {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: white; border: 3px solid #1E3A5F;
+            box-shadow: 0 2px 8px rgba(30,58,95,0.3); cursor: grab;
+          }
+          .dual-slider-thumb::-moz-range-track { background: transparent; }
+        `}</style>
+
+        {/* Track container */}
+        <div style={{ position: 'relative', height: '30px', marginBottom: '16px' }}>
+          {/* Gray background track */}
+          <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '6px', transform: 'translateY(-50%)', background: '#D0DCF0', borderRadius: '3px' }} />
+          {/* Blue active fill */}
+          <div style={{ position: 'absolute', top: '50%', height: '6px', transform: 'translateY(-50%)', left: `${pct(lo)}%`, width: `${pct(hi) - pct(lo)}%`, background: '#1E3A5F', borderRadius: '3px', pointerEvents: 'none' }} />
+
+          {/* Min input — z-index swaps based on which was last moved */}
+          <input
+            type="range" min={minVal} max={maxVal} step={step} value={lo}
+            onChange={handleMin} onMouseDown={() => setLastMoved('min')} onTouchStart={() => setLastMoved('min')}
+            className="dual-slider-thumb"
+            style={{ ...sliderBase, zIndex: lastMoved === 'min' ? 5 : 3 }}
+          />
+          {/* Max input */}
+          <input
+            type="range" min={minVal} max={maxVal} step={step} value={hi}
+            onChange={handleMax} onMouseDown={() => setLastMoved('max')} onTouchStart={() => setLastMoved('max')}
+            className="dual-slider-thumb"
+            style={{ ...sliderBase, zIndex: lastMoved === 'max' ? 5 : 3 }}
+          />
         </div>
 
         {/* Min / Max value boxes */}
