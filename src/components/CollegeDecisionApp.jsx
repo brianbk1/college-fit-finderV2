@@ -1,4 +1,53 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+
+const CollegeImage = ({ name }) => {
+  const [imgUrl, setImgUrl] = useState(null)
+  const [failed, setFailed] = useState(false)
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(name)}&prop=pageimages&format=json&pithumbsize=400&origin=*`)
+        const data = await res.json()
+        const pages = data.query.pages
+        const page = Object.values(pages)[0]
+        if (page.thumbnail) {
+          setImgUrl(page.thumbnail.source)
+        } else {
+          setFailed(true)
+        }
+      } catch {
+        setFailed(true)
+      }
+    }
+    fetchImage()
+  }, [name])
+
+  const googleUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(name + ' campus')}`
+
+  if (imgUrl) {
+    return (
+      <a href={googleUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%' }}>
+        <img src={imgUrl} alt={name} style={{ width: '100%', height: '160px', objectFit: 'cover', display: 'block' }} onError={() => { setImgUrl(null); setFailed(true) }} />
+      </a>
+    )
+  }
+
+  return (
+    <a href={googleUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '160px', textDecoration: 'none', gap: '8px' }}>
+      <span style={{ fontSize: '32px' }}>🎓</span>
+      <span style={{ color: '#c9765a', fontWeight: 'bold', fontSize: '12px', textAlign: 'center', padding: '0 10px' }}>{failed ? 'View Campus Photos' : 'Loading...'}</span>
+      {failed && <span style={{ color: '#9b8b7d', fontSize: '10px' }}>Opens Google Images</span>}
+    </a>
+  )
+}
+
+const ParameterText = ({ label, valueKey, placeholder, value, onChange }) => (
+  <div style={{ marginBottom: '16px', padding: '12px', background: '#faf8f3', borderRadius: '6px', border: '1px solid #e8dcc8' }}>
+    <label style={{ fontWeight: 'bold', color: '#6b4423', fontSize: '12px', display: 'block', marginBottom: '8px' }}>{label}</label>
+    <input type="text" value={value} onChange={(e) => onChange(valueKey, e.target.value)} placeholder={placeholder} style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #d4a574', boxSizing: 'border-box', color: '#6b4423', fontSize: '12px' }} />
+  </div>
+)
 
 const CollegeDecisionApp = () => {
   const [view, setView] = useState('search')
@@ -8,6 +57,8 @@ const CollegeDecisionApp = () => {
   const [homeLocation, setHomeLocation] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [zipInput, setZipInput] = useState('')
+  const [nameSearch, setNameSearch] = useState('')
   
   const [parameterValues, setParameterValues] = useState({
     netAnnualCostMin: 0,
@@ -368,15 +419,6 @@ Each object must have exactly these fields:
     )
   }
 
-  const ParameterText = ({ label, valueKey, placeholder }) => {
-    return (
-      <div style={{ marginBottom: '16px', padding: '12px', background: '#faf8f3', borderRadius: '6px', border: '1px solid #e8dcc8' }}>
-        <label style={{ fontWeight: 'bold', color: '#6b4423', fontSize: '12px', display: 'block', marginBottom: '8px' }}>{label}</label>
-        <input type="text" value={parameterValues[valueKey]} onChange={(e) => handleValueChange(valueKey, e.target.value)} placeholder={placeholder} style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #d4a574', boxSizing: 'border-box', color: '#6b4423', fontSize: '12px' }} />
-      </div>
-    )
-  }
-
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #fef5e7 0%, #faf8f3 50%, #f5f1e8 100%)', padding: '24px 12px', fontFamily: "'Georgia', serif" }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
@@ -396,8 +438,8 @@ Each object must have exactly these fields:
             <div style={{ background: 'white', borderRadius: '10px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(107, 68, 35, 0.1)', border: '2px solid #e8dcc8' }}>
               <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: '#6b4423', marginBottom: '10px' }}>📍 Where do you live?</h2>
               <div style={{ display: 'flex', gap: '10px' }}>
-                <input type="text" placeholder="Zip code" id="zipInput" maxLength="5" style={{ flex: 1, padding: '10px 12px', borderRadius: '6px', border: '2px solid #d4a574', fontSize: '13px', color: '#6b4423' }} />
-                <button onClick={() => { const zip = document.getElementById('zipInput').value; handleZipCodeSubmit(zip) }} style={{ padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', background: '#c9765a', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Set</button>
+                <input type="text" placeholder="Zip code" maxLength="5" value={zipInput} onChange={(e) => setZipInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleZipCodeSubmit(zipInput) }} style={{ flex: 1, padding: '10px 12px', borderRadius: '6px', border: '2px solid #d4a574', fontSize: '13px', color: '#6b4423' }} />
+                <button onClick={() => handleZipCodeSubmit(zipInput)} style={{ padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', background: '#c9765a', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Set</button>
               </div>
               {homeLocation && <p style={{ fontSize: '12px', color: '#6b4423', marginTop: '8px' }}>✓ {homeLocation.zip}</p>}
             </div>
@@ -405,8 +447,8 @@ Each object must have exactly these fields:
             <div style={{ background: 'white', borderRadius: '10px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(107, 68, 35, 0.1)', border: '2px solid #e8dcc8' }}>
               <h2 style={{ fontSize: '14px', fontWeight: 'bold', color: '#6b4423', marginBottom: '12px' }}>🔍 Search by College Name</h2>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                <input type="text" placeholder="Harvard, Tampa, Boston..." id="nameSearch" style={{ flex: 1, minWidth: '180px', padding: '10px 12px', borderRadius: '6px', border: '2px solid #d4a574', fontSize: '13px', color: '#6b4423' }} />
-                <button onClick={() => { const q = document.getElementById('nameSearch').value.trim(); if (q) searchCollegeByName(q) }} disabled={loading} style={{ padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', background: loading ? '#9b8b7d' : '#c9765a', color: 'white', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '13px' }}>{loading ? 'Searching...' : 'Search'}</button>
+                <input type="text" placeholder="Harvard, Tampa, Boston..." value={nameSearch} onChange={(e) => setNameSearch(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && nameSearch.trim()) searchCollegeByName(nameSearch.trim()) }} style={{ flex: 1, minWidth: '180px', padding: '10px 12px', borderRadius: '6px', border: '2px solid #d4a574', fontSize: '13px', color: '#6b4423' }} />
+                <button onClick={() => { if (nameSearch.trim()) searchCollegeByName(nameSearch.trim()) }} disabled={loading} style={{ padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', background: loading ? '#9b8b7d' : '#c9765a', color: 'white', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '13px' }}>{loading ? 'Searching...' : 'Search'}</button>
               </div>
             </div>
 
@@ -454,8 +496,8 @@ Each object must have exactly these fields:
 
                   <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#8b6f47', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #e8dcc8' }}>📚 Academic Programs</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px', marginBottom: '12px' }}>
-                    <ParameterText label="Major I Need" valueKey="majorNeeded" placeholder="e.g., Business, Interior Design" />
-                    <ParameterText label="Minor I'd Like" valueKey="minorNeeded" placeholder="Optional" />
+                    <ParameterText label="Major I Need" valueKey="majorNeeded" placeholder="e.g., Business, Interior Design" value={parameterValues.majorNeeded} onChange={handleValueChange} />
+                    <ParameterText label="Minor I'd Like" valueKey="minorNeeded" placeholder="Optional" value={parameterValues.minorNeeded} onChange={handleValueChange} />
                     <ParameterCheckbox label="Strong Business Program" valueKey="businessProgramImportant" />
                     <ParameterCheckbox label="Strong Arts/Design Program" valueKey="artsProgramImportant" />
                     <ParameterCheckbox label="Internship Access" valueKey="internshipAccessImportant" />
@@ -472,8 +514,9 @@ Each object must have exactly these fields:
                     disabled={loading}
                     style={{ width: '100%', padding: '14px', borderRadius: '6px', fontWeight: 'bold', background: loading ? '#9b8b7d' : '#c9765a', color: 'white', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '14px' }}
                   >
-                    {loading ? '🔍 Finding colleges...' : '🤖 Find Colleges Using AI'}
+                    {loading ? '🔍 Finding colleges...' : '🎓 Find Colleges'}
                   </button>
+                  <p style={{ fontSize: '11px', color: '#9b8b7d', textAlign: 'center', marginTop: '8px', marginBottom: 0 }}>Results are AI-generated. Always verify information directly with each college.</p>
                 </div>
               )}
             </div>
@@ -521,12 +564,8 @@ Each object must have exactly these fields:
 
                       <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 0 }}>
                         {/* Photo Column */}
-                        <div style={{ borderRight: '1px solid #e8dcc8' }}>
-                          <a href={college.image} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '160px', background: 'linear-gradient(135deg, #faf8f3 0%, #f0ebe0 100%)', textDecoration: 'none', padding: '20px', boxSizing: 'border-box', gap: '8px' }}>
-                            <span style={{ fontSize: '32px' }}>🖼️</span>
-                            <span style={{ color: '#c9765a', fontWeight: 'bold', fontSize: '12px', textAlign: 'center' }}>View Campus Photos</span>
-                            <span style={{ color: '#9b8b7d', fontSize: '10px', textAlign: 'center' }}>Opens Google Images</span>
-                          </a>
+                        <div style={{ borderRight: '1px solid #e8dcc8', minHeight: '160px', background: '#f5f1e8', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                          <CollegeImage name={college.name} />
                         </div>
 
                         {/* Info Column */}
