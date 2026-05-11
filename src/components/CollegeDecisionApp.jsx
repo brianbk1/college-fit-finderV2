@@ -36,16 +36,16 @@ const CollegeImage = ({ name }) => {
   return (
     <a href={googleUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '160px', textDecoration: 'none', gap: '8px' }}>
       <span style={{ fontSize: '32px' }}>🎓</span>
-      <span style={{ color: '#c9765a', fontWeight: 'bold', fontSize: '12px', textAlign: 'center', padding: '0 10px' }}>{failed ? 'View Campus Photos' : 'Loading...'}</span>
-      {failed && <span style={{ color: '#9b8b7d', fontSize: '10px' }}>Opens Google Images</span>}
+      <span style={{ color: '#E8650A', fontWeight: 'bold', fontSize: '12px', textAlign: 'center', padding: '0 10px' }}>{failed ? 'View Campus Photos' : 'Loading...'}</span>
+      {failed && <span style={{ color: '#5C7A9F', fontSize: '10px' }}>Opens Google Images</span>}
     </a>
   )
 }
 
 const ParameterText = ({ label, valueKey, placeholder, value, onChange }) => (
-  <div style={{ marginBottom: '16px', padding: '12px', background: '#faf8f3', borderRadius: '6px', border: '1px solid #e8dcc8' }}>
-    <label style={{ fontWeight: 'bold', color: '#6b4423', fontSize: '12px', display: 'block', marginBottom: '8px' }}>{label}</label>
-    <input type="text" value={value} onChange={(e) => onChange(valueKey, e.target.value)} placeholder={placeholder} style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #d4a574', boxSizing: 'border-box', color: '#6b4423', fontSize: '12px' }} />
+  <div style={{ marginBottom: '16px', padding: '12px', background: '#F7F9FF', borderRadius: '6px', border: '1px solid #C8D6EC' }}>
+    <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '12px', display: 'block', marginBottom: '8px' }}>{label}</label>
+    <input type="text" value={value} onChange={(e) => onChange(valueKey, e.target.value)} placeholder={placeholder} style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #F5A623', boxSizing: 'border-box', color: '#1E3A5F', fontSize: '12px' }} />
   </div>
 )
 
@@ -381,15 +381,15 @@ Each object must have exactly these fields:
 
   const ParameterSlider = ({ label, minKey, maxKey, minVal, maxVal, unit = '' }) => {
     return (
-      <div style={{ marginBottom: '16px', padding: '12px', background: '#faf8f3', borderRadius: '6px', border: '1px solid #e8dcc8' }}>
-        <label style={{ fontWeight: 'bold', color: '#6b4423', fontSize: '12px', display: 'block', marginBottom: '8px' }}>{label}</label>
+      <div style={{ marginBottom: '16px', padding: '12px', background: '#F7F9FF', borderRadius: '6px', border: '1px solid #C8D6EC' }}>
+        <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '12px', display: 'block', marginBottom: '8px' }}>{label}</label>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '10px', color: '#9b8b7d', marginBottom: '4px' }}>Min: {parameterValues[minKey]}{unit}</label>
+            <label style={{ display: 'block', fontSize: '10px', color: '#5C7A9F', marginBottom: '4px' }}>Min: {parameterValues[minKey]}{unit}</label>
             <input type="range" min={minVal} max={maxVal} value={parameterValues[minKey]} onChange={(e) => handleValueChange(minKey, parseInt(e.target.value))} style={{ width: '100%', cursor: 'pointer' }} />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '10px', color: '#9b8b7d', marginBottom: '4px' }}>Max: {parameterValues[maxKey]}{unit}</label>
+            <label style={{ display: 'block', fontSize: '10px', color: '#5C7A9F', marginBottom: '4px' }}>Max: {parameterValues[maxKey]}{unit}</label>
             <input type="range" min={minVal} max={maxVal} value={parameterValues[maxKey]} onChange={(e) => handleValueChange(maxKey, parseInt(e.target.value))} style={{ width: '100%', cursor: 'pointer' }} />
           </div>
         </div>
@@ -399,9 +399,9 @@ Each object must have exactly these fields:
 
   const ParameterSelect = ({ label, valueKey, options }) => {
     return (
-      <div style={{ marginBottom: '16px', padding: '12px', background: '#faf8f3', borderRadius: '6px', border: '1px solid #e8dcc8' }}>
-        <label style={{ fontWeight: 'bold', color: '#6b4423', fontSize: '12px', display: 'block', marginBottom: '8px' }}>{label}</label>
-        <select value={parameterValues[valueKey]} onChange={(e) => handleValueChange(valueKey, e.target.value)} style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #d4a574', background: 'white', color: '#6b4423', fontSize: '12px' }}>
+      <div style={{ marginBottom: '16px', padding: '12px', background: '#F7F9FF', borderRadius: '6px', border: '1px solid #C8D6EC' }}>
+        <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '12px', display: 'block', marginBottom: '8px' }}>{label}</label>
+        <select value={parameterValues[valueKey]} onChange={(e) => handleValueChange(valueKey, e.target.value)} style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #F5A623', background: 'white', color: '#1E3A5F', fontSize: '12px' }}>
           {options.map(opt => (<option key={opt} value={opt}>{opt}</option>))}
         </select>
       </div>
@@ -410,8 +410,8 @@ Each object must have exactly these fields:
 
   const ParameterCheckbox = ({ label, valueKey }) => {
     return (
-      <div style={{ marginBottom: '16px', padding: '12px', background: '#faf8f3', borderRadius: '6px', border: '1px solid #e8dcc8' }}>
-        <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', fontWeight: 'bold', color: '#6b4423', fontSize: '12px' }}>
+      <div style={{ marginBottom: '16px', padding: '12px', background: '#F7F9FF', borderRadius: '6px', border: '1px solid #C8D6EC' }}>
+        <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', fontWeight: 'bold', color: '#1E3A5F', fontSize: '12px' }}>
           <input type="checkbox" checked={parameterValues[valueKey]} onChange={(e) => handleValueChange(valueKey, e.target.checked)} style={{ marginRight: '6px', cursor: 'pointer' }} />
           {label}
         </label>
@@ -420,53 +420,53 @@ Each object must have exactly these fields:
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #fef5e7 0%, #faf8f3 50%, #f5f1e8 100%)', padding: '24px 12px', fontFamily: "'Georgia', serif" }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #F0F4FF 0%, #F7F9FF 50%, #EDF1FA 100%)', padding: '24px 12px', fontFamily: "'Georgia', serif" }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <h1 style={{ fontSize: '42px', fontWeight: 'bold', color: '#6b4423', marginBottom: '6px' }}>🎓 College Fit Finder</h1>
-          <p style={{ fontSize: '14px', color: '#9b8b7d' }}>AI-powered personalized college recommendations</p>
+          <h1 style={{ fontSize: '42px', fontWeight: 'bold', color: '#1E3A5F', marginBottom: '6px' }}>🎓 College Fit Finder</h1>
+          <p style={{ fontSize: '14px', color: '#E8650A', fontWeight: 'bold' }}>Find your perfect college match — powered by AI</p>
         </div>
 
         <div style={{ display: 'flex', gap: '10px', marginBottom: '24px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button onClick={() => setView('search')} style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: view === 'search' ? '#c9765a' : '#d4a574', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Search</button>
-          <button onClick={() => setView('saved')} style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: view === 'saved' ? '#c9765a' : '#d4a574', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Saved ({savedColleges.length})</button>
-          <button onClick={() => setView('resources')} style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: view === 'resources' ? '#c9765a' : '#d4a574', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Resources</button>
+          <button onClick={() => setView('search')} style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: view === 'search' ? '#1E3A5F' : '#E8650A', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Search</button>
+          <button onClick={() => setView('saved')} style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: view === 'saved' ? '#1E3A5F' : '#E8650A', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Saved ({savedColleges.length})</button>
+          <button onClick={() => setView('resources')} style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: view === 'resources' ? '#1E3A5F' : '#E8650A', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Resources</button>
         </div>
 
         {view === 'search' && (
           <div>
-            <div style={{ background: 'white', borderRadius: '10px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(107, 68, 35, 0.1)', border: '2px solid #e8dcc8' }}>
-              <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: '#6b4423', marginBottom: '10px' }}>📍 Where do you live?</h2>
+            <div style={{ background: 'white', borderRadius: '10px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(30, 58, 95, 0.1)', border: '2px solid #C8D6EC' }}>
+              <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: '#1E3A5F', marginBottom: '10px' }}>📍 Where do you live?</h2>
               <div style={{ display: 'flex', gap: '10px' }}>
-                <input type="text" placeholder="Zip code" maxLength="5" value={zipInput} onChange={(e) => setZipInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleZipCodeSubmit(zipInput) }} style={{ flex: 1, padding: '10px 12px', borderRadius: '6px', border: '2px solid #d4a574', fontSize: '13px', color: '#6b4423' }} />
-                <button onClick={() => handleZipCodeSubmit(zipInput)} style={{ padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', background: '#c9765a', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Set</button>
+                <input type="text" placeholder="Zip code" maxLength="5" value={zipInput} onChange={(e) => setZipInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleZipCodeSubmit(zipInput) }} style={{ flex: 1, padding: '10px 12px', borderRadius: '6px', border: '2px solid #F5A623', fontSize: '13px', color: '#1E3A5F' }} />
+                <button onClick={() => handleZipCodeSubmit(zipInput)} style={{ padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', background: '#E8650A', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px' }}>Set</button>
               </div>
-              {homeLocation && <p style={{ fontSize: '12px', color: '#6b4423', marginTop: '8px' }}>✓ {homeLocation.zip}</p>}
+              {homeLocation && <p style={{ fontSize: '12px', color: '#1E3A5F', marginTop: '8px' }}>✓ {homeLocation.zip}</p>}
             </div>
 
-            <div style={{ background: 'white', borderRadius: '10px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(107, 68, 35, 0.1)', border: '2px solid #e8dcc8' }}>
-              <h2 style={{ fontSize: '14px', fontWeight: 'bold', color: '#6b4423', marginBottom: '12px' }}>🔍 Search by College Name</h2>
+            <div style={{ background: 'white', borderRadius: '10px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(30, 58, 95, 0.1)', border: '2px solid #C8D6EC' }}>
+              <h2 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1E3A5F', marginBottom: '12px' }}>🔍 Search by College Name</h2>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                <input type="text" placeholder="Harvard, Tampa, Boston..." value={nameSearch} onChange={(e) => setNameSearch(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && nameSearch.trim()) searchCollegeByName(nameSearch.trim()) }} style={{ flex: 1, minWidth: '180px', padding: '10px 12px', borderRadius: '6px', border: '2px solid #d4a574', fontSize: '13px', color: '#6b4423' }} />
-                <button onClick={() => { if (nameSearch.trim()) searchCollegeByName(nameSearch.trim()) }} disabled={loading} style={{ padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', background: loading ? '#9b8b7d' : '#c9765a', color: 'white', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '13px' }}>{loading ? 'Searching...' : 'Search'}</button>
+                <input type="text" placeholder="Harvard, Tampa, Boston..." value={nameSearch} onChange={(e) => setNameSearch(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && nameSearch.trim()) searchCollegeByName(nameSearch.trim()) }} style={{ flex: 1, minWidth: '180px', padding: '10px 12px', borderRadius: '6px', border: '2px solid #F5A623', fontSize: '13px', color: '#1E3A5F' }} />
+                <button onClick={() => { if (nameSearch.trim()) searchCollegeByName(nameSearch.trim()) }} disabled={loading} style={{ padding: '10px 20px', borderRadius: '6px', fontWeight: 'bold', background: loading ? '#5C7A9F' : '#E8650A', color: 'white', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '13px' }}>{loading ? 'Searching...' : 'Search'}</button>
               </div>
             </div>
 
-            <div style={{ background: 'white', borderRadius: '10px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(107, 68, 35, 0.1)', border: '2px solid #e8dcc8' }}>
-              <h2 style={{ fontSize: '14px', fontWeight: 'bold', color: '#6b4423', marginBottom: '12px' }}>🤖 AI-Powered Preference Search</h2>
-              <p style={{ fontSize: '12px', color: '#9b8b7d', marginBottom: '12px' }}>Set your preferences below and let Claude's AI find colleges that match your criteria.</p>
+            <div style={{ background: 'white', borderRadius: '10px', padding: '20px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(30, 58, 95, 0.1)', border: '2px solid #C8D6EC' }}>
+              <h2 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1E3A5F', marginBottom: '12px' }}>🤖 AI-Powered Preference Search</h2>
+              <p style={{ fontSize: '12px', color: '#5C7A9F', marginBottom: '12px' }}>Set your preferences below and let Claude's AI find colleges that match your criteria.</p>
 
-              <button onClick={() => setShowFilters(!showFilters)} style={{ width: '100%', textAlign: 'left', padding: '12px', background: '#faf8f3', border: '1px solid #d4a574', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', color: '#6b4423', fontSize: '13px', marginBottom: '12px' }}>{showFilters ? '▼' : '►'} {showFilters ? 'Hide' : 'Show'} All 27 Preferences</button>
+              <button onClick={() => setShowFilters(!showFilters)} style={{ width: '100%', textAlign: 'left', padding: '12px', background: '#F7F9FF', border: '1px solid #F5A623', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', marginBottom: '12px' }}>{showFilters ? '▼' : '►'} {showFilters ? 'Hide' : 'Show'} All 27 Preferences</button>
 
               {showFilters && (
                 <div>
-                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#8b6f47', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #e8dcc8' }}>💰 Costs</h3>
+                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#2E5F8A', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #C8D6EC' }}>💰 Costs</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px', marginBottom: '12px' }}>
                     <ParameterSlider label="Net Annual Cost" minKey="netAnnualCostMin" maxKey="netAnnualCostMax" minVal={0} maxVal={80000} unit="$" />
                     <ParameterSlider label="Total 4-Year Cost" minKey="totalCostMin" maxKey="totalCostMax" minVal={0} maxVal={300000} unit="$" />
                   </div>
 
-                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#8b6f47', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #e8dcc8' }}>📍 Location & Environment</h3>
+                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#2E5F8A', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #C8D6EC' }}>📍 Location & Environment</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px', marginBottom: '12px' }}>
                     <ParameterSlider label="Distance from Home" minKey="distanceMin" maxKey="distanceMax" minVal={0} maxVal={3000} unit=" miles" />
                     <ParameterSelect label="Setting Type" valueKey="settingPreference" options={['Any', 'City', 'Suburban', 'College Town', 'Rural']} />
@@ -476,7 +476,7 @@ Each object must have exactly these fields:
                     <ParameterCheckbox label="Lake/Water Access" valueKey="lakeAccessImportant" />
                   </div>
 
-                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#8b6f47', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #e8dcc8' }}>🏫 Campus Life</h3>
+                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#2E5F8A', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #C8D6EC' }}>🏫 Campus Life</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px', marginBottom: '12px' }}>
                     <ParameterSlider label="Campus Size" minKey="campusSizeMin" maxKey="campusSizeMax" minVal={0} maxVal={50000} unit=" students" />
                     <ParameterSlider label="Undergraduate Enrollment" minKey="totalUndergraduateMin" maxKey="totalUndergraduateMax" minVal={0} maxVal={50000} unit=" students" />
@@ -488,13 +488,13 @@ Each object must have exactly these fields:
                     <ParameterSelect label="Greek Life" valueKey="greekLifePresence" options={['Any', 'Not Present', 'Small', 'Moderate', 'Large']} />
                   </div>
 
-                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#8b6f47', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #e8dcc8' }}>👥 Student Body</h3>
+                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#2E5F8A', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #C8D6EC' }}>👥 Student Body</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px', marginBottom: '12px' }}>
                     <ParameterSlider label="Male/Female Ratio" minKey="maleFemalRatioMin" maxKey="maleFemalRatioMax" minVal={0} maxVal={100} unit="% Female" />
                     <ParameterSelect label="LGBTQ+ Inclusiveness" valueKey="lgbtqInclusive" options={['Any', 'Important', 'Very Important']} />
                   </div>
 
-                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#8b6f47', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #e8dcc8' }}>📚 Academic Programs</h3>
+                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#2E5F8A', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #C8D6EC' }}>📚 Academic Programs</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px', marginBottom: '12px' }}>
                     <ParameterText label="Major I Need" valueKey="majorNeeded" placeholder="e.g., Business, Interior Design" value={parameterValues.majorNeeded} onChange={handleValueChange} />
                     <ParameterText label="Minor I'd Like" valueKey="minorNeeded" placeholder="Optional" value={parameterValues.minorNeeded} onChange={handleValueChange} />
@@ -504,7 +504,7 @@ Each object must have exactly these fields:
                     <ParameterCheckbox label="Good Career Outcomes" valueKey="careerOutcomesImportant" />
                   </div>
 
-                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#8b6f47', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #e8dcc8' }}>🎯 Selectivity</h3>
+                  <h3 style={{ fontSize: '12px', fontWeight: 'bold', color: '#2E5F8A', marginTop: '12px', marginBottom: '10px', paddingBottom: '6px', borderBottom: '1px solid #C8D6EC' }}>🎯 Selectivity</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px', marginBottom: '20px' }}>
                     <ParameterSlider label="Acceptance Difficulty" minKey="selectivityMin" maxKey="selectivityMax" minVal={0} maxVal={100} unit="%" />
                   </div>
@@ -512,11 +512,11 @@ Each object must have exactly these fields:
                   <button 
                     onClick={searchByPreferences}
                     disabled={loading}
-                    style={{ width: '100%', padding: '14px', borderRadius: '6px', fontWeight: 'bold', background: loading ? '#9b8b7d' : '#c9765a', color: 'white', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '14px' }}
+                    style={{ width: '100%', padding: '14px', borderRadius: '6px', fontWeight: 'bold', background: loading ? '#5C7A9F' : '#E8650A', color: 'white', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '14px' }}
                   >
                     {loading ? '🔍 Finding colleges...' : '🎓 Find Colleges'}
                   </button>
-                  <p style={{ fontSize: '11px', color: '#9b8b7d', textAlign: 'center', marginTop: '8px', marginBottom: 0 }}>Results are AI-generated. Always verify information directly with each college.</p>
+                  <p style={{ fontSize: '11px', color: '#5C7A9F', textAlign: 'center', marginTop: '8px', marginBottom: 0 }}>Results are AI-generated. Always verify information directly with each college.</p>
                 </div>
               )}
             </div>
@@ -527,44 +527,44 @@ Each object must have exactly these fields:
               <div>
                 {/* Preference Summary Banner */}
                 {buildSearchCriteriaSummary().length > 0 && (
-                  <div style={{ background: 'linear-gradient(135deg, #6b4423 0%, #8b6f47 100%)', borderRadius: '10px', padding: '16px 20px', marginBottom: '20px' }}>
-                    <p style={{ color: '#d4a574', fontSize: '11px', fontWeight: 'bold', margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: '1px' }}>Your Search Criteria</p>
+                  <div style={{ background: 'linear-gradient(135deg, #1E3A5F 0%, #2E5F8A 100%)', borderRadius: '10px', padding: '16px 20px', marginBottom: '20px' }}>
+                    <p style={{ color: '#F5A623', fontSize: '11px', fontWeight: 'bold', margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: '1px' }}>Your Search Criteria</p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                       {buildSearchCriteriaSummary().map((tag, i) => (
-                        <span key={i} style={{ background: 'rgba(212,165,116,0.25)', color: '#fef5e7', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid rgba(212,165,116,0.4)' }}>{tag}</span>
+                        <span key={i} style={{ background: 'rgba(212,165,116,0.25)', color: '#F0F4FF', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid rgba(212,165,116,0.4)' }}>{tag}</span>
                       ))}
                     </div>
                   </div>
                 )}
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#6b4423', margin: 0 }}>🎓 {searchResults.length} College{searchResults.length !== 1 ? 's' : ''} Found</h3>
-                  <button onClick={() => exportToCSV(searchResults)} style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: '#d4a574', color: 'white', border: 'none', cursor: 'pointer', fontSize: '12px' }}>📥 Export to CSV</button>
+                  <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1E3A5F', margin: 0 }}>🎓 {searchResults.length} College{searchResults.length !== 1 ? 's' : ''} Found</h3>
+                  <button onClick={() => exportToCSV(searchResults)} style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: '#F5A623', color: 'white', border: 'none', cursor: 'pointer', fontSize: '12px' }}>📥 Export to CSV</button>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   {searchResults.map((college, rank) => (
-                    <div key={college.id} style={{ background: 'white', borderRadius: '12px', border: '2px solid #e8dcc8', overflow: 'hidden', boxShadow: '0 2px 8px rgba(107,68,35,0.08)' }}>
+                    <div key={college.id} style={{ background: 'white', borderRadius: '12px', border: '2px solid #C8D6EC', overflow: 'hidden', boxShadow: '0 2px 8px rgba(107,68,35,0.08)' }}>
                       {/* Card Header */}
-                      <div style={{ background: 'linear-gradient(135deg, #fef5e7 0%, #f5f1e8 100%)', padding: '16px 20px', borderBottom: '1px solid #e8dcc8', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ background: 'linear-gradient(135deg, #F0F4FF 0%, #EDF1FA 100%)', padding: '16px 20px', borderBottom: '1px solid #C8D6EC', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                          <span style={{ background: '#c9765a', color: 'white', width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 'bold', flexShrink: 0 }}>#{rank + 1}</span>
+                          <span style={{ background: '#1E3A5F', color: 'white', width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 'bold', flexShrink: 0 }}>#{rank + 1}</span>
                           <div>
-                            <h4 style={{ fontSize: '18px', fontWeight: 'bold', color: '#6b4423', margin: 0 }}>{college.name}</h4>
-                            <p style={{ color: '#9b8b7d', fontSize: '13px', margin: '2px 0 0 0' }}>{college.city}{college.city && college.state ? ', ' : ''}{college.state}{college.setting ? ` · ${college.setting}` : ''}</p>
+                            <h4 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1E3A5F', margin: 0 }}>{college.name}</h4>
+                            <p style={{ color: '#5C7A9F', fontSize: '13px', margin: '2px 0 0 0' }}>{college.city}{college.city && college.state ? ', ' : ''}{college.state}{college.setting ? ` · ${college.setting}` : ''}</p>
                           </div>
                         </div>
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                           {college.website && college.website !== '#' && (
-                            <a href={college.website} target="_blank" rel="noopener noreferrer" style={{ color: '#c9765a', textDecoration: 'none', fontSize: '12px', fontWeight: 'bold', padding: '6px 12px', border: '1px solid #c9765a', borderRadius: '6px' }}>Visit Site →</a>
+                            <a href={college.website} target="_blank" rel="noopener noreferrer" style={{ color: '#E8650A', textDecoration: 'none', fontSize: '12px', fontWeight: 'bold', padding: '6px 12px', border: '1px solid #E8650A', borderRadius: '6px' }}>Visit Site →</a>
                           )}
-                          <button onClick={() => toggleSaveCollege(college)} style={{ background: isSaved(college.id) ? '#c9765a' : '#e8dcc8', color: isSaved(college.id) ? 'white' : '#6b4423', border: 'none', borderRadius: '6px', padding: '6px 14px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}>{isSaved(college.id) ? '★' : '☆'}</button>
+                          <button onClick={() => toggleSaveCollege(college)} style={{ background: isSaved(college.id) ? '#E8650A' : '#C8D6EC', color: isSaved(college.id) ? 'white' : '#1E3A5F', border: 'none', borderRadius: '6px', padding: '6px 14px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}>{isSaved(college.id) ? '★' : '☆'}</button>
                         </div>
                       </div>
 
                       <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 0 }}>
                         {/* Photo Column */}
-                        <div style={{ borderRight: '1px solid #e8dcc8', minHeight: '160px', background: '#f5f1e8', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                        <div style={{ borderRight: '1px solid #C8D6EC', minHeight: '160px', background: '#EDF1FA', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                           <CollegeImage name={college.name} />
                         </div>
 
@@ -572,34 +572,34 @@ Each object must have exactly these fields:
                         <div style={{ padding: '16px 20px' }}>
                           {/* Stats Row */}
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
-                            {college.enrollment && <span style={{ background: '#fef5e7', color: '#6b4423', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #e8dcc8' }}>👥 {college.enrollment.toLocaleString()} students</span>}
-                            {college.acceptanceRate && <span style={{ background: '#fef5e7', color: '#6b4423', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #e8dcc8' }}>🎯 {college.acceptanceRate}% acceptance</span>}
-                            {college.annualCost && <span style={{ background: '#fef5e7', color: '#6b4423', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #e8dcc8' }}>💰 ${college.annualCost.toLocaleString()}/yr est.</span>}
-                            {college.weather && <span style={{ background: '#fef5e7', color: '#6b4423', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #e8dcc8' }}>🌤️ {college.weather}</span>}
+                            {college.enrollment && <span style={{ background: '#F0F4FF', color: '#1E3A5F', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #C8D6EC' }}>👥 {college.enrollment.toLocaleString()} students</span>}
+                            {college.acceptanceRate && <span style={{ background: '#F0F4FF', color: '#1E3A5F', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #C8D6EC' }}>🎯 {college.acceptanceRate}% acceptance</span>}
+                            {college.annualCost && <span style={{ background: '#F0F4FF', color: '#1E3A5F', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #C8D6EC' }}>💰 ${college.annualCost.toLocaleString()}/yr est.</span>}
+                            {college.weather && <span style={{ background: '#F0F4FF', color: '#1E3A5F', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #C8D6EC' }}>🌤️ {college.weather}</span>}
                           </div>
 
                           {/* Details Grid */}
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px', marginBottom: '14px' }}>
-                            {college.topPrograms && <div style={{ fontSize: '12px', color: '#6b4423' }}><span style={{ fontWeight: 'bold' }}>📚 Programs:</span> {college.topPrograms}</div>}
-                            {college.nearbyAttractions && <div style={{ fontSize: '12px', color: '#6b4423' }}><span style={{ fontWeight: 'bold' }}>🗺️ Nearby:</span> {college.nearbyAttractions}</div>}
-                            {college.sportsCulture && <div style={{ fontSize: '12px', color: '#6b4423' }}><span style={{ fontWeight: 'bold' }}>🏈 Sports:</span> {college.sportsCulture}</div>}
-                            {college.greekLife && <div style={{ fontSize: '12px', color: '#6b4423' }}><span style={{ fontWeight: 'bold' }}>🏛️ Greek Life:</span> {college.greekLife}</div>}
+                            {college.topPrograms && <div style={{ fontSize: '12px', color: '#1E3A5F' }}><span style={{ fontWeight: 'bold' }}>📚 Programs:</span> {college.topPrograms}</div>}
+                            {college.nearbyAttractions && <div style={{ fontSize: '12px', color: '#1E3A5F' }}><span style={{ fontWeight: 'bold' }}>🗺️ Nearby:</span> {college.nearbyAttractions}</div>}
+                            {college.sportsCulture && <div style={{ fontSize: '12px', color: '#1E3A5F' }}><span style={{ fontWeight: 'bold' }}>🏈 Sports:</span> {college.sportsCulture}</div>}
+                            {college.greekLife && <div style={{ fontSize: '12px', color: '#1E3A5F' }}><span style={{ fontWeight: 'bold' }}>🏛️ Greek Life:</span> {college.greekLife}</div>}
                           </div>
 
                           {/* Fit Summary */}
                           {college.bio && (
-                            <div style={{ background: '#faf8f3', borderRadius: '8px', padding: '12px', marginBottom: '12px', borderLeft: '3px solid #c9765a' }}>
-                              <p style={{ fontSize: '13px', color: '#6b4423', lineHeight: '1.6', margin: 0 }}>{college.bio}</p>
+                            <div style={{ background: '#F7F9FF', borderRadius: '8px', padding: '12px', marginBottom: '12px', borderLeft: '3px solid #E8650A' }}>
+                              <p style={{ fontSize: '13px', color: '#1E3A5F', lineHeight: '1.6', margin: 0 }}>{college.bio}</p>
                             </div>
                           )}
 
                           {/* Why It Fits Tags */}
                           {college.whyItFits && college.whyItFits.length > 0 && (
                             <div>
-                              <p style={{ fontSize: '11px', fontWeight: 'bold', color: '#9b8b7d', margin: '0 0 6px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Why it fits your criteria</p>
+                              <p style={{ fontSize: '11px', fontWeight: 'bold', color: '#5C7A9F', margin: '0 0 6px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Why it fits your criteria</p>
                               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                 {college.whyItFits.map((reason, i) => (
-                                  <span key={i} style={{ background: '#e8f5e9', color: '#2e7d32', fontSize: '11px', padding: '3px 10px', borderRadius: '20px', border: '1px solid #c8e6c9' }}>✓ {reason}</span>
+                                  <span key={i} style={{ background: '#E8F5E9', color: '#2E7D32', fontSize: '11px', padding: '3px 10px', borderRadius: '20px', border: '1px solid #A5D6A7' }}>✓ {reason}</span>
                                 ))}
                               </div>
                             </div>
@@ -613,8 +613,8 @@ Each object must have exactly these fields:
             )}
 
             {searchResults.length === 0 && !error && (
-              <div style={{ textAlign: 'center', padding: '40px 20px', background: 'white', borderRadius: '8px', border: '2px solid #e8dcc8' }}>
-                <p style={{ color: '#9b8b7d', fontSize: '14px' }}>Search above to get started</p>
+              <div style={{ textAlign: 'center', padding: '40px 20px', background: 'white', borderRadius: '8px', border: '2px solid #C8D6EC' }}>
+                <p style={{ color: '#5C7A9F', fontSize: '14px' }}>Search above to get started</p>
               </div>
             )}
           </div>
@@ -623,31 +623,31 @@ Each object must have exactly these fields:
         {view === 'saved' && (
           <div>
             {savedColleges.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '50px 20px', background: 'white', borderRadius: '8px', border: '2px solid #e8dcc8' }}>
-                <p style={{ color: '#9b8b7d', fontSize: '14px', marginBottom: '16px' }}>No saved colleges</p>
-                <button onClick={() => setView('search')} style={{ background: '#c9765a', color: 'white', padding: '8px 16px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>Search</button>
+              <div style={{ textAlign: 'center', padding: '50px 20px', background: 'white', borderRadius: '8px', border: '2px solid #C8D6EC' }}>
+                <p style={{ color: '#5C7A9F', fontSize: '14px', marginBottom: '16px' }}>No saved colleges</p>
+                <button onClick={() => setView('search')} style={{ background: '#E8650A', color: 'white', padding: '8px 16px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>Search</button>
               </div>
             ) : (
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#6b4423', margin: 0 }}>Saved Colleges ({savedColleges.length})</h3>
+                  <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1E3A5F', margin: 0 }}>Saved Colleges ({savedColleges.length})</h3>
                   <button 
                     onClick={() => exportToCSV(savedColleges)}
-                    style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: '#d4a574', color: 'white', border: 'none', cursor: 'pointer', fontSize: '12px' }}
+                    style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: '#F5A623', color: 'white', border: 'none', cursor: 'pointer', fontSize: '12px' }}
                   >
                     📥 Export to CSV
                   </button>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {savedColleges.map(college => (
-                    <div key={college.id} style={{ background: 'white', padding: '20px', borderRadius: '8px', border: '2px solid #e8dcc8' }}>
+                    <div key={college.id} style={{ background: 'white', padding: '20px', borderRadius: '8px', border: '2px solid #C8D6EC' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
                         <div>
-                          <h4 style={{ fontSize: '16px', fontWeight: 'bold', color: '#6b4423', margin: '0 0 4px 0' }}>{college.name}</h4>
-                          {(college.city || college.state) && <p style={{ color: '#9b8b7d', fontSize: '12px', margin: '0 0 8px 0' }}>{college.city}{college.city && college.state ? ', ' : ''}{college.state}</p>}
-                          {college.website && college.website !== '#' && <a href={college.website} target="_blank" rel="noopener noreferrer" style={{ color: '#c9765a', textDecoration: 'none', fontSize: '12px', fontWeight: 'bold' }}>Learn More →</a>}
+                          <h4 style={{ fontSize: '16px', fontWeight: 'bold', color: '#1E3A5F', margin: '0 0 4px 0' }}>{college.name}</h4>
+                          {(college.city || college.state) && <p style={{ color: '#5C7A9F', fontSize: '12px', margin: '0 0 8px 0' }}>{college.city}{college.city && college.state ? ', ' : ''}{college.state}</p>}
+                          {college.website && college.website !== '#' && <a href={college.website} target="_blank" rel="noopener noreferrer" style={{ color: '#E8650A', textDecoration: 'none', fontSize: '12px', fontWeight: 'bold' }}>Learn More →</a>}
                         </div>
-                        <button onClick={() => toggleSaveCollege(college)} style={{ background: '#c9765a', color: 'white', border: 'none', borderRadius: '6px', padding: '8px 12px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}>Remove</button>
+                        <button onClick={() => toggleSaveCollege(college)} style={{ background: '#E8650A', color: 'white', border: 'none', borderRadius: '6px', padding: '8px 12px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}>Remove</button>
                       </div>
                     </div>
                   ))}
@@ -659,21 +659,21 @@ Each object must have exactly these fields:
 
         {view === 'resources' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '12px' }}>
-            <a href="https://fafsa.ed.gov" target="_blank" rel="noopener noreferrer" style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '2px solid #e8dcc8', textDecoration: 'none', color: 'inherit' }}>
-              <h3 style={{ fontWeight: 'bold', color: '#6b4423', marginBottom: '6px', fontSize: '13px' }}>💵 FAFSA</h3>
-              <p style={{ color: '#9b8b7d', fontSize: '12px', margin: 0 }}>Free Application for Federal Student Aid</p>
+            <a href="https://fafsa.ed.gov" target="_blank" rel="noopener noreferrer" style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '2px solid #C8D6EC', textDecoration: 'none', color: 'inherit' }}>
+              <h3 style={{ fontWeight: 'bold', color: '#1E3A5F', marginBottom: '6px', fontSize: '13px' }}>💵 FAFSA</h3>
+              <p style={{ color: '#5C7A9F', fontSize: '12px', margin: 0 }}>Free Application for Federal Student Aid</p>
             </a>
-            <a href="https://www.scholarships.com" target="_blank" rel="noopener noreferrer" style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '2px solid #e8dcc8', textDecoration: 'none', color: 'inherit' }}>
-              <h3 style={{ fontWeight: 'bold', color: '#6b4423', marginBottom: '6px', fontSize: '13px' }}>🎓 Scholarships</h3>
-              <p style={{ color: '#9b8b7d', fontSize: '12px', margin: 0 }}>Find scholarships and grants</p>
+            <a href="https://www.scholarships.com" target="_blank" rel="noopener noreferrer" style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '2px solid #C8D6EC', textDecoration: 'none', color: 'inherit' }}>
+              <h3 style={{ fontWeight: 'bold', color: '#1E3A5F', marginBottom: '6px', fontSize: '13px' }}>🎓 Scholarships</h3>
+              <p style={{ color: '#5C7A9F', fontSize: '12px', margin: 0 }}>Find scholarships and grants</p>
             </a>
-            <a href="https://www.fastweb.com" target="_blank" rel="noopener noreferrer" style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '2px solid #e8dcc8', textDecoration: 'none', color: 'inherit' }}>
-              <h3 style={{ fontWeight: 'bold', color: '#6b4423', marginBottom: '6px', fontSize: '13px' }}>🔍 FastWeb</h3>
-              <p style={{ color: '#9b8b7d', fontSize: '12px', margin: 0 }}>Scholarship matching</p>
+            <a href="https://www.fastweb.com" target="_blank" rel="noopener noreferrer" style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '2px solid #C8D6EC', textDecoration: 'none', color: 'inherit' }}>
+              <h3 style={{ fontWeight: 'bold', color: '#1E3A5F', marginBottom: '6px', fontSize: '13px' }}>🔍 FastWeb</h3>
+              <p style={{ color: '#5C7A9F', fontSize: '12px', margin: 0 }}>Scholarship matching</p>
             </a>
-            <a href="https://www.collegeboard.org" target="_blank" rel="noopener noreferrer" style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '2px solid #e8dcc8', textDecoration: 'none', color: 'inherit' }}>
-              <h3 style={{ fontWeight: 'bold', color: '#6b4423', marginBottom: '6px', fontSize: '13px' }}>📖 College Board</h3>
-              <p style={{ color: '#9b8b7d', fontSize: '12px', margin: 0 }}>SAT, AP, and college search</p>
+            <a href="https://www.collegeboard.org" target="_blank" rel="noopener noreferrer" style={{ background: 'white', padding: '16px', borderRadius: '8px', border: '2px solid #C8D6EC', textDecoration: 'none', color: 'inherit' }}>
+              <h3 style={{ fontWeight: 'bold', color: '#1E3A5F', marginBottom: '6px', fontSize: '13px' }}>📖 College Board</h3>
+              <p style={{ color: '#5C7A9F', fontSize: '12px', margin: 0 }}>SAT, AP, and college search</p>
             </a>
           </div>
         )}
