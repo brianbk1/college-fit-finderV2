@@ -55,65 +55,80 @@ const CollegeDecisionApp = () => {
     }
   }
 
+  const buildSearchCriteriaSummary = () => {
+    const criteria = []
+    if (parameterValues.netAnnualCostMax < 80000) criteria.push(`💰 Net cost under $${parameterValues.netAnnualCostMax.toLocaleString()}/yr`)
+    if (parameterValues.totalCostMax < 300000) criteria.push(`💰 4-yr cost under $${parameterValues.totalCostMax.toLocaleString()}`)
+    if (homeLocation) criteria.push(`📍 Within ${parameterValues.distanceMax} miles of ${homeLocation.zip}`)
+    if (parameterValues.settingPreference !== 'any') criteria.push(`🏙️ ${parameterValues.settingPreference} setting`)
+    if (parameterValues.weatherPreference !== 'any') criteria.push(`🌤️ ${parameterValues.weatherPreference} climate`)
+    if (parameterValues.beachAccessImportant) criteria.push(`🏖️ Beach access`)
+    if (parameterValues.mountainAccessImportant) criteria.push(`⛷️ Mountains/skiing`)
+    if (parameterValues.lakeAccessImportant) criteria.push(`🏞️ Lake/water access`)
+    if (parameterValues.campusSizeMax < 50000) criteria.push(`🏫 Under ${parameterValues.campusSizeMax.toLocaleString()} students`)
+    if (parameterValues.avgClassSizeMax < 500) criteria.push(`📖 Class size under ${parameterValues.avgClassSizeMax}`)
+    if (parameterValues.recreationCenter) criteria.push(`🏊 Rec center/pool`)
+    if (parameterValues.sportsCultureLevel !== 'any') criteria.push(`🏈 ${parameterValues.sportsCultureLevel} sports culture`)
+    if (parameterValues.greekLifePresence !== 'any') criteria.push(`🏛️ ${parameterValues.greekLifePresence} Greek life`)
+    if (parameterValues.lgbtqInclusive !== 'any') criteria.push(`🏳️‍🌈 LGBTQ+ inclusive`)
+    if (parameterValues.majorNeeded) criteria.push(`📚 Major: ${parameterValues.majorNeeded}`)
+    if (parameterValues.minorNeeded) criteria.push(`📝 Minor: ${parameterValues.minorNeeded}`)
+    if (parameterValues.businessProgramImportant) criteria.push(`💼 Strong business program`)
+    if (parameterValues.artsProgramImportant) criteria.push(`🎨 Strong arts program`)
+    if (parameterValues.internshipAccessImportant) criteria.push(`🤝 Internship access`)
+    if (parameterValues.careerOutcomesImportant) criteria.push(`🚀 Strong career outcomes`)
+    if (parameterValues.selectivityMax < 100) criteria.push(`🎯 Acceptance rate ~${parameterValues.selectivityMax}%+`)
+    return criteria
+  }
+
   const buildSearchPrompt = () => {
     const criteria = []
-    
     if (parameterValues.netAnnualCostMax < 80000) criteria.push(`Annual net cost under $${parameterValues.netAnnualCostMax.toLocaleString()}`)
     if (parameterValues.totalCostMax < 300000) criteria.push(`Total 4-year cost under $${parameterValues.totalCostMax.toLocaleString()}`)
-    
     if (homeLocation) criteria.push(`Within approximately ${parameterValues.distanceMax} miles of zip code ${homeLocation.zip}`)
     if (parameterValues.settingPreference !== 'any') criteria.push(`${parameterValues.settingPreference} setting preference`)
     if (parameterValues.weatherPreference !== 'any') criteria.push(`${parameterValues.weatherPreference} weather/climate`)
-    if (parameterValues.beachAccessImportant) criteria.push(`Beach or coastal access (within 30-45 minutes preferred)`)
+    if (parameterValues.beachAccessImportant) criteria.push(`Beach or coastal access within 30-45 minutes`)
     if (parameterValues.mountainAccessImportant) criteria.push(`Mountain or skiing access nearby`)
     if (parameterValues.lakeAccessImportant) criteria.push(`Lake or water access nearby`)
-    
-    if (parameterValues.campusSizeMax < 50000) criteria.push(`Campus size under ${parameterValues.campusSizeMax} students`)
-    if (parameterValues.totalUndergraduateMax < 50000) criteria.push(`Undergraduate enrollment under ${parameterValues.totalUndergraduateMax} students`)
+    if (parameterValues.campusSizeMax < 50000) criteria.push(`Undergraduate enrollment under ${parameterValues.campusSizeMax.toLocaleString()} students`)
     if (parameterValues.avgClassSizeMax < 500) criteria.push(`Average class size under ${parameterValues.avgClassSizeMax} students`)
     if (parameterValues.carOnCampus !== 'any') criteria.push(`Freshman car policy: ${parameterValues.carOnCampus}`)
     if (parameterValues.recreationCenter) criteria.push(`Pool/recreation center on campus`)
     if (parameterValues.sportsCultureLevel !== 'any') criteria.push(`${parameterValues.sportsCultureLevel} sports culture`)
     if (parameterValues.schoolSpiritLevel !== 'any') criteria.push(`${parameterValues.schoolSpiritLevel} school spirit`)
     if (parameterValues.greekLifePresence !== 'any') criteria.push(`${parameterValues.greekLifePresence} Greek life`)
-    
-    if (parameterValues.maleFemalRatioMax < 100) criteria.push(`Male/female ratio: ${parameterValues.maleFemalRatioMin}-${parameterValues.maleFemalRatioMax}% female`)
-    if (parameterValues.lgbtqInclusive !== 'any') criteria.push(`LGBTQ+ ${parameterValues.lgbtqInclusive === 'Very Important' ? 'very' : ''} inclusive campus`)
-    
-    if (parameterValues.majorNeeded) criteria.push(`Strong major programs in: ${parameterValues.majorNeeded}`)
-    if (parameterValues.minorNeeded) criteria.push(`Minor/additional programs in: ${parameterValues.minorNeeded}`)
+    if (parameterValues.lgbtqInclusive !== 'any') criteria.push(`LGBTQ+ inclusive campus`)
+    if (parameterValues.majorNeeded) criteria.push(`Strong major: ${parameterValues.majorNeeded}`)
+    if (parameterValues.minorNeeded) criteria.push(`Minor in: ${parameterValues.minorNeeded}`)
     if (parameterValues.businessProgramImportant) criteria.push(`Strong business/entrepreneurship programs`)
-    if (parameterValues.artsProgramImportant) criteria.push(`Strong arts, design, and creative programs`)
-    if (parameterValues.internshipAccessImportant) criteria.push(`Good internship access and opportunities`)
+    if (parameterValues.artsProgramImportant) criteria.push(`Strong arts and design programs`)
+    if (parameterValues.internshipAccessImportant) criteria.push(`Good internship access`)
     if (parameterValues.careerOutcomesImportant) criteria.push(`Strong post-graduation career outcomes`)
-    
     if (parameterValues.selectivityMax < 100) criteria.push(`Acceptance rate around ${parameterValues.selectivityMax}% or higher`)
 
-    const prompt = `Find U.S. colleges and universities that match these student preferences:
-${criteria.length > 0 ? criteria.map(c => `• ${c}`).join('\n') : '• No specific criteria selected - recommend well-rounded colleges'}
+    return `You are a college counselor. Find 8-10 U.S. colleges matching these student preferences:
+${criteria.length > 0 ? criteria.map(c => `• ${c}`).join('\n') : '• No specific criteria - recommend well-rounded colleges'}
 
-For each college, provide complete details:
-- School name and location (city, state)
-- Undergraduate enrollment
-- Distance to nearest beach (if applicable)
-- Average temperatures by season
-- Campus setting (urban, suburban, college town, rural)
-- Nearby outdoor attractions (beaches, mountains, lakes, etc.)
-- Campus amenities (rec center, sports, etc.)
-- Relevant academic programs and majors
-- Male/female ratio
-- LGBTQ+ friendliness rating
-- Freshman car policy
-- Campus culture (sports, greek life, arts, nightlife, etc.)
-- Greek life presence
-- Student activities and social scene
-- Estimated annual cost after average financial aid
-- Acceptance rate
-- Brief summary of fit
-
-Return 8-12 matching colleges ranked by overall fit with the stated criteria.`
-
-    return prompt
+Respond ONLY with a valid JSON array. No markdown, no explanation, just the JSON array.
+Each object must have exactly these fields:
+{
+  "name": "Full official college name",
+  "city": "City",
+  "state": "2-letter state code",
+  "website": "https://official-website.edu",
+  "enrollment": 12000,
+  "acceptanceRate": 45,
+  "annualCost": 28000,
+  "setting": "Urban/Suburban/College Town/Rural",
+  "weather": "Mild and sunny year-round",
+  "greekLife": "Moderate Greek presence",
+  "sportsCulture": "High - Division I athletics",
+  "nearbyAttractions": "30 min to beach, hiking trails nearby",
+  "topPrograms": "Business, Engineering, Communications",
+  "fitSummary": "2-3 sentence explanation of why this college matches the student's specific criteria",
+  "whyItFits": ["reason 1 tied to their criteria", "reason 2", "reason 3"]
+}`
   }
 
   const searchCollegeByName = async (collegeName) => {
@@ -245,32 +260,34 @@ Return 8-12 matching colleges ranked by overall fit with the stated criteria.`
   }
 
   const parseAIResponse = (response) => {
-    const colleges = []
-    const sections = response.split(/\n(?=\d+\.|[A-Z]{2,}:)/)
-    
-    sections.forEach((section, idx) => {
-      if (section.trim().length > 20) {
-        const lines = section.trim().split('\n')
-        const firstLine = lines[0]
-        const nameMatch = firstLine.match(/(?:^[\d.]+\s*)?([^–\n]+?)(?:\s*–|$)/)
-        const name = nameMatch ? nameMatch[1].trim() : firstLine.substring(0, 50)
-        
-        if (name && name.length > 2) {
-          colleges.push({
-            id: `ai-${idx}`,
-            name: name.replace(/\*\*/g, ''),
-            city: '',
-            state: '',
-            website: '#',
-            bio: lines.slice(0, 5).join(' ').substring(0, 350),
-            fullInfo: section,
-            image: `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(name + ' campus')}`
-          })
-        }
-      }
-    })
-
-    return colleges.filter(c => c.name && c.name.length > 3)
+    try {
+      const cleaned = response.replace(/```json|```/g, '').trim()
+      const jsonMatch = cleaned.match(/\[[\s\S]*\]/)
+      if (!jsonMatch) return []
+      const parsed = JSON.parse(jsonMatch[0])
+      return parsed.map((c, idx) => ({
+        id: `ai-${idx}`,
+        name: c.name || 'Unknown',
+        city: c.city || '',
+        state: c.state || '',
+        website: c.website || '#',
+        enrollment: c.enrollment || null,
+        acceptanceRate: c.acceptanceRate || null,
+        annualCost: c.annualCost || null,
+        setting: c.setting || '',
+        weather: c.weather || '',
+        greekLife: c.greekLife || '',
+        sportsCulture: c.sportsCulture || '',
+        nearbyAttractions: c.nearbyAttractions || '',
+        topPrograms: c.topPrograms || '',
+        bio: c.fitSummary || '',
+        whyItFits: c.whyItFits || [],
+        image: `https://www.google.com/search?tbm=isch&q=${encodeURIComponent((c.name || '') + ' campus')}`
+      }))
+    } catch (e) {
+      console.error('JSON parse failed:', e)
+      return []
+    }
   }
 
   const toggleSaveCollege = (college) => {
@@ -465,37 +482,90 @@ Return 8-12 matching colleges ranked by overall fit with the stated criteria.`
 
             {searchResults.length > 0 && (
               <div>
+                {/* Preference Summary Banner */}
+                {buildSearchCriteriaSummary().length > 0 && (
+                  <div style={{ background: 'linear-gradient(135deg, #6b4423 0%, #8b6f47 100%)', borderRadius: '10px', padding: '16px 20px', marginBottom: '20px' }}>
+                    <p style={{ color: '#d4a574', fontSize: '11px', fontWeight: 'bold', margin: '0 0 10px 0', textTransform: 'uppercase', letterSpacing: '1px' }}>Your Search Criteria</p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      {buildSearchCriteriaSummary().map((tag, i) => (
+                        <span key={i} style={{ background: 'rgba(212,165,116,0.25)', color: '#fef5e7', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid rgba(212,165,116,0.4)' }}>{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#6b4423', margin: 0 }}>{searchResults.length} College{searchResults.length !== 1 ? 's' : ''} Found</h3>
-                  <button 
-                    onClick={() => exportToCSV(searchResults)}
-                    style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: '#d4a574', color: 'white', border: 'none', cursor: 'pointer', fontSize: '12px' }}
-                  >
-                    📥 Export to CSV
-                  </button>
+                  <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#6b4423', margin: 0 }}>🎓 {searchResults.length} College{searchResults.length !== 1 ? 's' : ''} Found</h3>
+                  <button onClick={() => exportToCSV(searchResults)} style={{ padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', background: '#d4a574', color: 'white', border: 'none', cursor: 'pointer', fontSize: '12px' }}>📥 Export to CSV</button>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  {searchResults.map(college => (
-                    <div key={college.id} style={{ background: 'white', borderRadius: '8px', border: '2px solid #e8dcc8', overflow: 'hidden' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', gap: '16px', padding: '16px' }}>
-                        <div style={{ minWidth: '200px', maxWidth: '200px', height: '150px', background: '#f0f0f0', borderRadius: '6px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <a href={college.image} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', background: 'linear-gradient(135deg, #faf8f3 0%, #f5f1e8 100%)', cursor: 'pointer', textDecoration: 'none', color: '#c9765a', fontWeight: 'bold', fontSize: '12px', textAlign: 'center', padding: '10px', boxSizing: 'border-box' }}>
-                            🖼️ View Photos
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {searchResults.map((college, rank) => (
+                    <div key={college.id} style={{ background: 'white', borderRadius: '12px', border: '2px solid #e8dcc8', overflow: 'hidden', boxShadow: '0 2px 8px rgba(107,68,35,0.08)' }}>
+                      {/* Card Header */}
+                      <div style={{ background: 'linear-gradient(135deg, #fef5e7 0%, #f5f1e8 100%)', padding: '16px 20px', borderBottom: '1px solid #e8dcc8', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <span style={{ background: '#c9765a', color: 'white', width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 'bold', flexShrink: 0 }}>#{rank + 1}</span>
+                          <div>
+                            <h4 style={{ fontSize: '18px', fontWeight: 'bold', color: '#6b4423', margin: 0 }}>{college.name}</h4>
+                            <p style={{ color: '#9b8b7d', fontSize: '13px', margin: '2px 0 0 0' }}>{college.city}{college.city && college.state ? ', ' : ''}{college.state}{college.setting ? ` · ${college.setting}` : ''}</p>
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          {college.website && college.website !== '#' && (
+                            <a href={college.website} target="_blank" rel="noopener noreferrer" style={{ color: '#c9765a', textDecoration: 'none', fontSize: '12px', fontWeight: 'bold', padding: '6px 12px', border: '1px solid #c9765a', borderRadius: '6px' }}>Visit Site →</a>
+                          )}
+                          <button onClick={() => toggleSaveCollege(college)} style={{ background: isSaved(college.id) ? '#c9765a' : '#e8dcc8', color: isSaved(college.id) ? 'white' : '#6b4423', border: 'none', borderRadius: '6px', padding: '6px 14px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}>{isSaved(college.id) ? '★' : '☆'}</button>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 0 }}>
+                        {/* Photo Column */}
+                        <div style={{ borderRight: '1px solid #e8dcc8' }}>
+                          <a href={college.image} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '160px', background: 'linear-gradient(135deg, #faf8f3 0%, #f0ebe0 100%)', textDecoration: 'none', padding: '20px', boxSizing: 'border-box', gap: '8px' }}>
+                            <span style={{ fontSize: '32px' }}>🖼️</span>
+                            <span style={{ color: '#c9765a', fontWeight: 'bold', fontSize: '12px', textAlign: 'center' }}>View Campus Photos</span>
+                            <span style={{ color: '#9b8b7d', fontSize: '10px', textAlign: 'center' }}>Opens Google Images</span>
                           </a>
                         </div>
-                        <div>
-                          <h4 style={{ fontSize: '16px', fontWeight: 'bold', color: '#6b4423', margin: '0 0 4px 0' }}>{college.name}</h4>
-                          {(college.city || college.state) && <p style={{ color: '#9b8b7d', fontSize: '12px', margin: '0 0 8px 0' }}>{college.city}{college.city && college.state ? ', ' : ''}{college.state}</p>}
-                          {college.website && college.website !== '#' && <a href={college.website} target="_blank" rel="noopener noreferrer" style={{ color: '#c9765a', textDecoration: 'none', fontSize: '12px', fontWeight: 'bold' }}>Visit Website →</a>}
-                          <p style={{ color: '#6b4423', fontSize: '13px', lineHeight: '1.6', marginTop: '8px' }}>{college.bio}</p>
-                          {(college.netCost || college.campusSize) && (
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px', marginTop: '12px', fontSize: '12px', color: '#9b8b7d' }}>
-                              {college.netCost && <div>💰 ${college.netCost.toLocaleString()}/yr</div>}
-                              {college.campusSize && <div>👥 {college.campusSize.toLocaleString()} students</div>}
+
+                        {/* Info Column */}
+                        <div style={{ padding: '16px 20px' }}>
+                          {/* Stats Row */}
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+                            {college.enrollment && <span style={{ background: '#fef5e7', color: '#6b4423', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #e8dcc8' }}>👥 {college.enrollment.toLocaleString()} students</span>}
+                            {college.acceptanceRate && <span style={{ background: '#fef5e7', color: '#6b4423', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #e8dcc8' }}>🎯 {college.acceptanceRate}% acceptance</span>}
+                            {college.annualCost && <span style={{ background: '#fef5e7', color: '#6b4423', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #e8dcc8' }}>💰 ${college.annualCost.toLocaleString()}/yr est.</span>}
+                            {college.weather && <span style={{ background: '#fef5e7', color: '#6b4423', fontSize: '12px', padding: '4px 10px', borderRadius: '20px', border: '1px solid #e8dcc8' }}>🌤️ {college.weather}</span>}
+                          </div>
+
+                          {/* Details Grid */}
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px', marginBottom: '14px' }}>
+                            {college.topPrograms && <div style={{ fontSize: '12px', color: '#6b4423' }}><span style={{ fontWeight: 'bold' }}>📚 Programs:</span> {college.topPrograms}</div>}
+                            {college.nearbyAttractions && <div style={{ fontSize: '12px', color: '#6b4423' }}><span style={{ fontWeight: 'bold' }}>🗺️ Nearby:</span> {college.nearbyAttractions}</div>}
+                            {college.sportsCulture && <div style={{ fontSize: '12px', color: '#6b4423' }}><span style={{ fontWeight: 'bold' }}>🏈 Sports:</span> {college.sportsCulture}</div>}
+                            {college.greekLife && <div style={{ fontSize: '12px', color: '#6b4423' }}><span style={{ fontWeight: 'bold' }}>🏛️ Greek Life:</span> {college.greekLife}</div>}
+                          </div>
+
+                          {/* Fit Summary */}
+                          {college.bio && (
+                            <div style={{ background: '#faf8f3', borderRadius: '8px', padding: '12px', marginBottom: '12px', borderLeft: '3px solid #c9765a' }}>
+                              <p style={{ fontSize: '13px', color: '#6b4423', lineHeight: '1.6', margin: 0 }}>{college.bio}</p>
+                            </div>
+                          )}
+
+                          {/* Why It Fits Tags */}
+                          {college.whyItFits && college.whyItFits.length > 0 && (
+                            <div>
+                              <p style={{ fontSize: '11px', fontWeight: 'bold', color: '#9b8b7d', margin: '0 0 6px 0', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Why it fits your criteria</p>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                {college.whyItFits.map((reason, i) => (
+                                  <span key={i} style={{ background: '#e8f5e9', color: '#2e7d32', fontSize: '11px', padding: '3px 10px', borderRadius: '20px', border: '1px solid #c8e6c9' }}>✓ {reason}</span>
+                                ))}
+                              </div>
                             </div>
                           )}
                         </div>
-                        <button onClick={() => toggleSaveCollege(college)} style={{ background: isSaved(college.id) ? '#c9765a' : '#e8dcc8', color: isSaved(college.id) ? 'white' : '#6b4423', border: 'none', borderRadius: '6px', padding: '8px 12px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px', whiteSpace: 'nowrap', height: 'fit-content' }}>{isSaved(college.id) ? '★' : '☆'}</button>
                       </div>
                     </div>
                   ))}
