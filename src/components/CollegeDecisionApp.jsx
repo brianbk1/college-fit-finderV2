@@ -199,7 +199,7 @@ Return 8-12 matching colleges ranked by overall fit with the stated criteria.`
     const prompt = buildSearchPrompt()
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('/api/claude', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
