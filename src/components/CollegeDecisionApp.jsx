@@ -71,26 +71,83 @@ const ToggleChip = ({ label, emoji, valueKey, values, onChange }) => {
   )
 }
 
-// ─── SLIDER (min/max) ─────────────────────────────────────────
-const RangeSlider = ({ label, minKey, maxKey, minVal, maxVal, step = 1, format, values, onChange }) => {
+// ─── DUAL-HANDLE RANGE SLIDER (Zillow-style) ─────────────────
+const DualSlider = ({ label, minKey, maxKey, minVal, maxVal, step = 1, format, values, onChange }) => {
   const fmt = format || (v => v.toLocaleString())
+  const lo = values[minKey]
+  const hi = values[maxKey]
+  const pct = (v) => ((v - minVal) / (maxVal - minVal)) * 100
+
+  const handleMin = (e) => {
+    const v = parseInt(e.target.value)
+    if (v <= hi - step) onChange(minKey, v)
+  }
+  const handleMax = (e) => {
+    const v = parseInt(e.target.value)
+    if (v >= lo + step) onChange(maxKey, v)
+  }
+
+  const trackStyle = {
+    position: 'absolute', height: '6px', borderRadius: '3px', top: '50%', transform: 'translateY(-50%)',
+    left: `${pct(lo)}%`, width: `${pct(hi) - pct(lo)}%`, background: '#1E3A5F', pointerEvents: 'none'
+  }
+  const sliderBase = {
+    position: 'absolute', width: '100%', height: '6px', appearance: 'none', WebkitAppearance: 'none',
+    background: 'transparent', outline: 'none', cursor: 'pointer', pointerEvents: 'auto',
+    top: '50%', transform: 'translateY(-50%)', margin: 0,
+  }
+
   return (
-    <div style={{ marginBottom: '20px' }}>
-      <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', display: 'block', marginBottom: '6px' }}>{label}</label>
-      <div style={{ background: '#F0F4FF', borderRadius: '10px', padding: '14px 16px', border: '1px solid #C8D6EC' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-          <span style={{ fontSize: '12px', color: '#5C7A9F' }}>Min: <strong style={{ color: '#1E3A5F' }}>{fmt(values[minKey])}</strong></span>
-          <span style={{ fontSize: '12px', color: '#5C7A9F' }}>Max: <strong style={{ color: '#1E3A5F' }}>{fmt(values[maxKey])}</strong></span>
+    <div style={{ marginBottom: '24px' }}>
+      <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', display: 'block', marginBottom: '10px' }}>{label}</label>
+      <div style={{ background: '#F0F4FF', borderRadius: '12px', padding: '16px', border: '1px solid #C8D6EC' }}>
+
+        {/* Track + handles */}
+        <div style={{ position: 'relative', height: '36px', marginBottom: '14px' }}>
+          {/* Gray full track */}
+          <div style={{ position: 'absolute', height: '6px', borderRadius: '3px', top: '50%', transform: 'translateY(-50%)', left: 0, right: 0, background: '#D0DCF0' }} />
+          {/* Blue active track */}
+          <div style={trackStyle} />
+          {/* Min handle */}
+          <input type="range" min={minVal} max={maxVal} step={step} value={lo} onChange={handleMin}
+            style={{ ...sliderBase, zIndex: lo > maxVal - (maxVal - minVal) * 0.1 ? 5 : 4 }} />
+          {/* Max handle */}
+          <input type="range" min={minVal} max={maxVal} step={step} value={hi} onChange={handleMax}
+            style={{ ...sliderBase, zIndex: 5 }} />
+          <style>{`
+            input[type=range]::-webkit-slider-thumb {
+              -webkit-appearance: none; appearance: none;
+              width: 28px; height: 28px; border-radius: 50%;
+              background: white; border: 3px solid #1E3A5F;
+              box-shadow: 0 2px 6px rgba(30,58,95,0.25);
+              cursor: grab; transition: transform 0.1s;
+            }
+            input[type=range]:active::-webkit-slider-thumb { transform: scale(1.15); cursor: grabbing; }
+            input[type=range]::-moz-range-thumb {
+              width: 28px; height: 28px; border-radius: 50%;
+              background: white; border: 3px solid #1E3A5F;
+              box-shadow: 0 2px 6px rgba(30,58,95,0.25); cursor: grab;
+            }
+          `}</style>
         </div>
-        <input type="range" min={minVal} max={maxVal} step={step} value={values[minKey]}
-          onChange={e => onChange(minKey, parseInt(e.target.value))}
-          style={{ width: '100%', marginBottom: '10px', accentColor: '#E8650A', height: '6px', cursor: 'pointer' }} />
-        <input type="range" min={minVal} max={maxVal} step={step} value={values[maxKey]}
-          onChange={e => onChange(maxKey, parseInt(e.target.value))}
-          style={{ width: '100%', accentColor: '#1E3A5F', height: '6px', cursor: 'pointer' }} />
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
-          <span style={{ fontSize: '10px', color: '#9BB0C8' }}>{fmt(minVal)}</span>
-          <span style={{ fontSize: '10px', color: '#9BB0C8' }}>{fmt(maxVal)}</span>
+
+        {/* Min / Max value boxes */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 24px 1fr', alignItems: 'center', gap: '8px' }}>
+          <div style={{ background: 'white', border: '2px solid #C8D6EC', borderRadius: '8px', padding: '10px 12px' }}>
+            <p style={{ fontSize: '10px', color: '#5C7A9F', margin: '0 0 2px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Min</p>
+            <p style={{ fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', margin: 0 }}>{fmt(lo)}</p>
+          </div>
+          <p style={{ textAlign: 'center', color: '#9BB0C8', fontWeight: 'bold', margin: 0, fontSize: '16px' }}>—</p>
+          <div style={{ background: 'white', border: '2px solid #C8D6EC', borderRadius: '8px', padding: '10px 12px' }}>
+            <p style={{ fontSize: '10px', color: '#5C7A9F', margin: '0 0 2px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Max</p>
+            <p style={{ fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', margin: 0 }}>{fmt(hi)}</p>
+          </div>
+        </div>
+
+        {/* Endpoint labels */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
+          <span style={{ fontSize: '11px', color: '#9BB0C8' }}>{fmt(minVal)}</span>
+          <span style={{ fontSize: '11px', color: '#9BB0C8' }}>{fmt(maxVal)}</span>
         </div>
       </div>
     </div>
@@ -129,35 +186,27 @@ const CollegeDecisionApp = () => {
 
   const [p, setP] = useState({
     // costs
-    netAnnualCostMax: 80000,
-    totalCostMax: 300000,
+    netAnnualCostMin: 0, netAnnualCostMax: 80000,
+    totalCostMin: 0, totalCostMax: 300000,
     // location
-    distanceMax: 3000,
-    settingTypes: [],        // multi: City, Suburban, College Town, Rural
-    weatherTypes: [],        // multi: Cold/Snowy, Mild/Temperate, Warm/Hot
-    beachAccess: false,
-    mountainAccess: false,
-    lakeAccess: false,
+    distanceMin: 0, distanceMax: 3000,
+    settingTypes: [],
+    weatherTypes: [],
+    beachAccess: false, mountainAccess: false, lakeAccess: false,
     // campus life
-    campusSizeMax: 50000,
-    avgClassSizeMax: 500,
-    carOnCampus: [],         // multi: Yes allowed, No required, Don't care
+    campusSizeMin: 0, campusSizeMax: 50000,
+    avgClassSizeMin: 5, avgClassSizeMax: 500,
+    carOnCampus: [],
     recreationCenter: false,
-    sportsLevels: [],        // multi: Low, Moderate, High
-    spiritLevels: [],        // multi: Low, Moderate, High
-    greekLifeLevels: [],     // multi: Not Present, Small, Moderate, Large
+    sportsLevels: [], spiritLevels: [], greekLifeLevels: [],
     // student body
-    lgbtqInclusive: [],      // multi: Important, Very Important
+    lgbtqInclusive: [],
     // academics
-    majorNeeded: '',
-    minorNeeded: '',
-    businessProgram: false,
-    artsProgram: false,
-    internshipAccess: false,
-    careerOutcomes: false,
+    majorNeeded: '', minorNeeded: '',
+    businessProgram: false, artsProgram: false,
+    internshipAccess: false, careerOutcomes: false,
     // selectivity
-    acceptanceRateMin: 0,
-    acceptanceRateMax: 100,
+    acceptanceRateMin: 0, acceptanceRateMax: 100,
   })
 
   const handleP = (key, value) => setP(prev => ({ ...prev, [key]: value }))
@@ -172,9 +221,9 @@ const CollegeDecisionApp = () => {
 
   const buildSearchCriteriaSummary = () => {
     const tags = []
-    if (p.netAnnualCostMax < 80000) tags.push(`💰 Under ${fmtDollars(p.netAnnualCostMax)}/yr`)
-    if (p.totalCostMax < 300000) tags.push(`💰 4-yr under ${fmtDollars(p.totalCostMax)}`)
-    if (homeLocation) tags.push(`📍 Within ${p.distanceMax} mi of ${homeLocation.zip}`)
+    if (p.netAnnualCostMax < 80000) tags.push(`💰 Cost $${p.netAnnualCostMin.toLocaleString()}–$${p.netAnnualCostMax.toLocaleString()}/yr`)
+    if (p.totalCostMax < 300000) tags.push(`💰 4-yr $${p.totalCostMin.toLocaleString()}–$${p.totalCostMax.toLocaleString()}`)
+    if (homeLocation) tags.push(`📍 ${p.distanceMin}–${p.distanceMax} mi of ${homeLocation.zip}`)
     if (p.settingTypes.length) tags.push(`🏙️ ${p.settingTypes.join(', ')}`)
     if (p.weatherTypes.length) tags.push(`🌤️ ${p.weatherTypes.join(', ')}`)
     if (p.beachAccess) tags.push('🏖️ Beach access')
@@ -198,16 +247,16 @@ const CollegeDecisionApp = () => {
 
   const buildSearchPrompt = () => {
     const criteria = []
-    if (p.netAnnualCostMax < 80000) criteria.push(`Annual net cost under ${fmtDollars(p.netAnnualCostMax)}`)
-    if (p.totalCostMax < 300000) criteria.push(`Total 4-year cost under ${fmtDollars(p.totalCostMax)}`)
-    if (homeLocation) criteria.push(`Within ${p.distanceMax} miles of zip code ${homeLocation.zip}`)
+    if (p.netAnnualCostMax < 80000) criteria.push(`Annual net cost between $${p.netAnnualCostMin.toLocaleString()} and $${p.netAnnualCostMax.toLocaleString()}`)
+    if (p.totalCostMax < 300000) criteria.push(`Total 4-year cost between $${p.totalCostMin.toLocaleString()} and $${p.totalCostMax.toLocaleString()}`)
+    if (homeLocation) criteria.push(`Between ${p.distanceMin} and ${p.distanceMax} miles from zip code ${homeLocation.zip}`)
     if (p.settingTypes.length) criteria.push(`Setting preference: ${p.settingTypes.join(' or ')}`)
     if (p.weatherTypes.length) criteria.push(`Climate preference: ${p.weatherTypes.join(' or ')}`)
     if (p.beachAccess) criteria.push('Beach or coastal access within 30-45 minutes')
     if (p.mountainAccess) criteria.push('Mountain or skiing access nearby')
     if (p.lakeAccess) criteria.push('Lake or water access nearby')
-    if (p.campusSizeMax < 50000) criteria.push(`Undergraduate enrollment under ${p.campusSizeMax.toLocaleString()}`)
-    if (p.avgClassSizeMax < 500) criteria.push(`Average class size under ${p.avgClassSizeMax}`)
+    if (p.campusSizeMax < 50000) criteria.push(`Undergraduate enrollment between ${p.campusSizeMin.toLocaleString()} and ${p.campusSizeMax.toLocaleString()}`)
+    if (p.avgClassSizeMax < 500) criteria.push(`Average class size between ${p.avgClassSizeMin} and ${p.avgClassSizeMax} students`)
     if (p.carOnCampus.length) criteria.push(`Freshman car policy: ${p.carOnCampus.join(' or ')}`)
     if (p.recreationCenter) criteria.push('Pool/recreation center on campus')
     if (p.sportsLevels.length) criteria.push(`Sports culture level: ${p.sportsLevels.join(' or ')}`)
@@ -463,11 +512,11 @@ Each object must have exactly these fields:
                 <div style={{ padding: '0 16px 16px' }}>
 
                   <SectionHeader emoji="💰" title="Costs" />
-                  <RangeSlider label="Max Annual Net Cost" minKey="netAnnualCostMax" maxKey="netAnnualCostMax" minVal={0} maxVal={80000} step={1000} format={fmtDollars} values={p} onChange={(k, v) => handleP('netAnnualCostMax', v)} />
-                  <RangeSlider label="Max Total 4-Year Cost" minKey="totalCostMax" maxKey="totalCostMax" minVal={0} maxVal={300000} step={5000} format={fmtDollars} values={p} onChange={(k, v) => handleP('totalCostMax', v)} />
+                  <DualSlider label="Annual Net Cost" minKey="netAnnualCostMin" maxKey="netAnnualCostMax" minVal={0} maxVal={80000} step={1000} format={fmtDollars} values={p} onChange={handleP} />
+                  <DualSlider label="Total 4-Year Cost" minKey="totalCostMin" maxKey="totalCostMax" minVal={0} maxVal={300000} step={5000} format={fmtDollars} values={p} onChange={handleP} />
 
                   <SectionHeader emoji="📍" title="Location & Environment" />
-                  <RangeSlider label="Max Distance from Home" minKey="distanceMax" maxKey="distanceMax" minVal={0} maxVal={3000} step={50} format={v => `${v} miles`} values={p} onChange={(k, v) => handleP('distanceMax', v)} />
+                  <DualSlider label="Distance from Home" minKey="distanceMin" maxKey="distanceMax" minVal={0} maxVal={3000} step={50} format={v => `${v} mi`} values={p} onChange={handleP} />
                   <PillSelect label="Campus Setting (select all that apply)" valueKey="settingTypes" options={['City', 'Suburban', 'College Town', 'Rural']} values={p} onChange={handleP} />
                   <PillSelect label="Climate Preference (select all that apply)" valueKey="weatherTypes" options={['Cold/Snowy', 'Mild/Temperate', 'Warm/Hot']} values={p} onChange={handleP} />
                   <div style={{ marginBottom: '20px' }}>
@@ -480,8 +529,8 @@ Each object must have exactly these fields:
                   </div>
 
                   <SectionHeader emoji="🏫" title="Campus Life" />
-                  <RangeSlider label="Max Campus Size" minKey="campusSizeMax" maxKey="campusSizeMax" minVal={500} maxVal={50000} step={500} format={fmtStudents} values={p} onChange={(k, v) => handleP('campusSizeMax', v)} />
-                  <RangeSlider label="Max Average Class Size" minKey="avgClassSizeMax" maxKey="avgClassSizeMax" minVal={5} maxVal={500} step={5} format={v => `${v} students`} values={p} onChange={(k, v) => handleP('avgClassSizeMax', v)} />
+                  <DualSlider label="Campus Size" minKey="campusSizeMin" maxKey="campusSizeMax" minVal={0} maxVal={50000} step={500} format={v => `${v.toLocaleString()} students`} values={p} onChange={handleP} />
+                  <DualSlider label="Average Class Size" minKey="avgClassSizeMin" maxKey="avgClassSizeMax" minVal={5} maxVal={500} step={5} format={v => `${v} students`} values={p} onChange={handleP} />
                   <PillSelect label="Sports Culture" valueKey="sportsLevels" options={['Low', 'Moderate', 'High']} values={p} onChange={handleP} />
                   <PillSelect label="School Spirit" valueKey="spiritLevels" options={['Low', 'Moderate', 'High']} values={p} onChange={handleP} />
                   <PillSelect label="Greek Life" valueKey="greekLifeLevels" options={['Not Present', 'Small', 'Moderate', 'Large']} values={p} onChange={handleP} />
@@ -510,7 +559,7 @@ Each object must have exactly these fields:
                   </div>
 
                   <SectionHeader emoji="🎯" title="Selectivity" />
-                  <RangeSlider label="Acceptance Rate Range" minKey="acceptanceRateMin" maxKey="acceptanceRateMax" minVal={0} maxVal={100} step={5} format={fmtPct} values={p} onChange={handleP} />
+                  <DualSlider label="Acceptance Rate" minKey="acceptanceRateMin" maxKey="acceptanceRateMax" minVal={0} maxVal={100} step={5} format={v => `${v}%`} values={p} onChange={handleP} />
 
                   {/* Find Colleges button inside panel */}
                   <button onClick={searchByPreferences} disabled={loading} style={{ width: '100%', padding: '16px', borderRadius: '10px', fontWeight: 'bold', background: loading ? '#9BB0C8' : '#E8650A', color: 'white', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '16px', marginTop: '8px' }}>
