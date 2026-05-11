@@ -122,7 +122,7 @@ Return 8-12 matching colleges ranked by overall fit with the stated criteria.`
     setSearchResults([])
 
     try {
-      const apiUrl = `https://api.data.gov/ed/collegescorecard/v1/schools.json?school.name=${encodeURIComponent(collegeName)}&_fields=id,school.name,school.city,school.state,school.url,latest.student.size,latest.cost.avg_net_price.public&_per_page=50
+      const apiUrl = `https://api.data.gov/ed/collegescorecard/v1/schools.json?school.name=${encodeURIComponent(collegeName)}&_fields=id,school.name,school.city,school.state,school.url,latest.student.size,latest.cost.avg_net_price.public&_per_page=50`
       
       const response = await fetch(apiUrl, { 
         method: 'GET',
