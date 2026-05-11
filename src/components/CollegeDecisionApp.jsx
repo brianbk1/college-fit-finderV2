@@ -71,98 +71,41 @@ const ToggleChip = ({ label, emoji, valueKey, values, onChange }) => {
   )
 }
 
-// ─── DUAL-HANDLE RANGE SLIDER (Zillow-style) ─────────────────
-const DualSlider = ({ label, minKey, maxKey, minVal, maxVal, step = 1, format, values, onChange }) => {
-  const [lastMoved, setLastMoved] = useState('max')
-  const fmt = format || (v => v.toLocaleString())
-  const lo = values[minKey]
-  const hi = values[maxKey]
-  const pct = (v) => ((v - minVal) / (maxVal - minVal)) * 100
-
-  const handleMin = (e) => {
-    const v = parseInt(e.target.value)
-    if (v < hi) { onChange(minKey, v); setLastMoved('min') }
-  }
-  const handleMax = (e) => {
-    const v = parseInt(e.target.value)
-    if (v > lo) { onChange(maxKey, v); setLastMoved('max') }
-  }
-
-  const sliderBase = {
-    position: 'absolute', width: '100%', height: '100%',
-    appearance: 'none', WebkitAppearance: 'none',
-    background: 'transparent', outline: 'none', cursor: 'pointer',
-    top: 0, left: 0, margin: 0, padding: 0,
-  }
-
-  return (
-    <div style={{ marginBottom: '24px' }}>
-      <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', display: 'block', marginBottom: '10px' }}>{label}</label>
-      <div style={{ background: '#F0F4FF', borderRadius: '12px', padding: '20px 16px 16px', border: '1px solid #C8D6EC' }}>
-
-        <style>{`
-          .dual-slider-thumb::-webkit-slider-thumb {
-            -webkit-appearance: none; appearance: none;
-            width: 30px; height: 30px; border-radius: 50%;
-            background: white; border: 3px solid #1E3A5F;
-            box-shadow: 0 2px 8px rgba(30,58,95,0.3);
-            cursor: grab;
-          }
-          .dual-slider-thumb:active::-webkit-slider-thumb { cursor: grabbing; transform: scale(1.1); }
-          .dual-slider-thumb::-webkit-slider-runnable-track { background: transparent; }
-          .dual-slider-thumb::-moz-range-thumb {
-            width: 30px; height: 30px; border-radius: 50%;
-            background: white; border: 3px solid #1E3A5F;
-            box-shadow: 0 2px 8px rgba(30,58,95,0.3); cursor: grab;
-          }
-          .dual-slider-thumb::-moz-range-track { background: transparent; }
-        `}</style>
-
-        {/* Track container */}
-        <div style={{ position: 'relative', height: '30px', marginBottom: '16px' }}>
-          {/* Gray background track */}
-          <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '6px', transform: 'translateY(-50%)', background: '#D0DCF0', borderRadius: '3px' }} />
-          {/* Blue active fill */}
-          <div style={{ position: 'absolute', top: '50%', height: '6px', transform: 'translateY(-50%)', left: `${pct(lo)}%`, width: `${pct(hi) - pct(lo)}%`, background: '#1E3A5F', borderRadius: '3px', pointerEvents: 'none' }} />
-
-          {/* Min input — z-index swaps based on which was last moved */}
+// ─── MIN/MAX INPUT ────────────────────────────────────────────
+const MinMaxInput = ({ label, minKey, maxKey, prefix = '', suffix = '', placeholder_min, placeholder_max, values, onChange }) => (
+  <div style={{ marginBottom: '24px' }}>
+    <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', display: 'block', marginBottom: '10px' }}>{label}</label>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: '8px' }}>
+      <div style={{ background: 'white', border: '2px solid #C8D6EC', borderRadius: '8px', padding: '10px 12px' }}>
+        <p style={{ fontSize: '10px', color: '#5C7A9F', margin: '0 0 4px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Min</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          {prefix && <span style={{ color: '#5C7A9F', fontSize: '14px' }}>{prefix}</span>}
           <input
-            type="range" min={minVal} max={maxVal} step={step} value={lo}
-            onChange={handleMin} onMouseDown={() => setLastMoved('min')} onTouchStart={() => setLastMoved('min')}
-            className="dual-slider-thumb"
-            style={{ ...sliderBase, zIndex: lastMoved === 'min' ? 5 : 3 }}
+            type="number" value={values[minKey] === 0 ? '' : values[minKey]}
+            onChange={e => onChange(minKey, e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
+            placeholder={placeholder_min || '0'}
+            style={{ width: '100%', border: 'none', outline: 'none', fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', background: 'transparent', fontFamily: 'inherit' }}
           />
-          {/* Max input */}
+          {suffix && <span style={{ color: '#5C7A9F', fontSize: '13px', whiteSpace: 'nowrap' }}>{suffix}</span>}
+        </div>
+      </div>
+      <span style={{ color: '#9BB0C8', fontWeight: 'bold', fontSize: '18px', textAlign: 'center' }}>—</span>
+      <div style={{ background: 'white', border: '2px solid #C8D6EC', borderRadius: '8px', padding: '10px 12px' }}>
+        <p style={{ fontSize: '10px', color: '#5C7A9F', margin: '0 0 4px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Max</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          {prefix && <span style={{ color: '#5C7A9F', fontSize: '14px' }}>{prefix}</span>}
           <input
-            type="range" min={minVal} max={maxVal} step={step} value={hi}
-            onChange={handleMax} onMouseDown={() => setLastMoved('max')} onTouchStart={() => setLastMoved('max')}
-            className="dual-slider-thumb"
-            style={{ ...sliderBase, zIndex: lastMoved === 'max' ? 5 : 3 }}
+            type="number" value={values[maxKey]}
+            onChange={e => onChange(maxKey, e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
+            placeholder={placeholder_max || 'Any'}
+            style={{ width: '100%', border: 'none', outline: 'none', fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', background: 'transparent', fontFamily: 'inherit' }}
           />
-        </div>
-
-        {/* Min / Max value boxes */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 24px 1fr', alignItems: 'center', gap: '8px' }}>
-          <div style={{ background: 'white', border: '2px solid #C8D6EC', borderRadius: '8px', padding: '10px 12px' }}>
-            <p style={{ fontSize: '10px', color: '#5C7A9F', margin: '0 0 2px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Min</p>
-            <p style={{ fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', margin: 0 }}>{fmt(lo)}</p>
-          </div>
-          <p style={{ textAlign: 'center', color: '#9BB0C8', fontWeight: 'bold', margin: 0, fontSize: '16px' }}>—</p>
-          <div style={{ background: 'white', border: '2px solid #C8D6EC', borderRadius: '8px', padding: '10px 12px' }}>
-            <p style={{ fontSize: '10px', color: '#5C7A9F', margin: '0 0 2px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Max</p>
-            <p style={{ fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', margin: 0 }}>{fmt(hi)}</p>
-          </div>
-        </div>
-
-        {/* Endpoint labels */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
-          <span style={{ fontSize: '11px', color: '#9BB0C8' }}>{fmt(minVal)}</span>
-          <span style={{ fontSize: '11px', color: '#9BB0C8' }}>{fmt(maxVal)}</span>
+          {suffix && <span style={{ color: '#5C7A9F', fontSize: '13px', whiteSpace: 'nowrap' }}>{suffix}</span>}
         </div>
       </div>
     </div>
-  )
-}
+  </div>
+)
 
 // ─── TEXT INPUT ───────────────────────────────────────────────
 const TextInput = ({ label, valueKey, placeholder, values, onChange }) => (
@@ -224,8 +167,6 @@ const CollegeDecisionApp = () => {
   const handleZipCodeSubmit = (zip) => {
     if (zip.trim()) setHomeLocation({ zip: zip.trim() })
   }
-
-  const fmtDollars = (v) => `$${v.toLocaleString()}`
 
   const buildSearchCriteriaSummary = () => {
     const tags = []
@@ -520,11 +461,11 @@ Each object must have exactly these fields:
                 <div style={{ padding: '0 16px 16px' }}>
 
                   <SectionHeader emoji="💰" title="Costs" />
-                  <DualSlider label="Annual Net Cost" minKey="netAnnualCostMin" maxKey="netAnnualCostMax" minVal={0} maxVal={80000} step={1000} format={fmtDollars} values={p} onChange={handleP} />
-                  <DualSlider label="Total 4-Year Cost" minKey="totalCostMin" maxKey="totalCostMax" minVal={0} maxVal={300000} step={5000} format={fmtDollars} values={p} onChange={handleP} />
+                  <MinMaxInput label="Annual Net Cost" minKey="netAnnualCostMin" maxKey="netAnnualCostMax" prefix="$" placeholder_min="0" placeholder_max="80000" values={p} onChange={handleP} />
+                  <MinMaxInput label="Total 4-Year Cost" minKey="totalCostMin" maxKey="totalCostMax" prefix="$" placeholder_min="0" placeholder_max="300000" values={p} onChange={handleP} />
 
                   <SectionHeader emoji="📍" title="Location & Environment" />
-                  <DualSlider label="Distance from Home" minKey="distanceMin" maxKey="distanceMax" minVal={0} maxVal={3000} step={50} format={v => `${v} mi`} values={p} onChange={handleP} />
+                  <MinMaxInput label="Distance from Home" minKey="distanceMin" maxKey="distanceMax" suffix="miles" placeholder_min="0" placeholder_max="3000" values={p} onChange={handleP} />
                   <PillSelect label="Campus Setting (select all that apply)" valueKey="settingTypes" options={['City', 'Suburban', 'College Town', 'Rural']} values={p} onChange={handleP} />
                   <PillSelect label="Climate Preference (select all that apply)" valueKey="weatherTypes" options={['Cold/Snowy', 'Mild/Temperate', 'Warm/Hot']} values={p} onChange={handleP} />
                   <div style={{ marginBottom: '20px' }}>
@@ -537,8 +478,8 @@ Each object must have exactly these fields:
                   </div>
 
                   <SectionHeader emoji="🏫" title="Campus Life" />
-                  <DualSlider label="Campus Size" minKey="campusSizeMin" maxKey="campusSizeMax" minVal={0} maxVal={50000} step={500} format={v => `${v.toLocaleString()} students`} values={p} onChange={handleP} />
-                  <DualSlider label="Average Class Size" minKey="avgClassSizeMin" maxKey="avgClassSizeMax" minVal={5} maxVal={500} step={5} format={v => `${v} students`} values={p} onChange={handleP} />
+                  <MinMaxInput label="Campus Size" minKey="campusSizeMin" maxKey="campusSizeMax" suffix="students" placeholder_min="0" placeholder_max="50000" values={p} onChange={handleP} />
+                  <MinMaxInput label="Average Class Size" minKey="avgClassSizeMin" maxKey="avgClassSizeMax" suffix="students" placeholder_min="5" placeholder_max="500" values={p} onChange={handleP} />
                   <PillSelect label="Sports Culture" valueKey="sportsLevels" options={['Low', 'Moderate', 'High']} values={p} onChange={handleP} />
                   <PillSelect label="School Spirit" valueKey="spiritLevels" options={['Low', 'Moderate', 'High']} values={p} onChange={handleP} />
                   <PillSelect label="Greek Life" valueKey="greekLifeLevels" options={['Not Present', 'Small', 'Moderate', 'Large']} values={p} onChange={handleP} />
@@ -567,7 +508,7 @@ Each object must have exactly these fields:
                   </div>
 
                   <SectionHeader emoji="🎯" title="Selectivity" />
-                  <DualSlider label="Acceptance Rate" minKey="acceptanceRateMin" maxKey="acceptanceRateMax" minVal={0} maxVal={100} step={5} format={v => `${v}%`} values={p} onChange={handleP} />
+                  <MinMaxInput label="Acceptance Rate" minKey="acceptanceRateMin" maxKey="acceptanceRateMax" suffix="%" placeholder_min="0" placeholder_max="100" values={p} onChange={handleP} />
 
                   {/* Find Colleges button inside panel */}
                   <button onClick={searchByPreferences} disabled={loading} style={{ width: '100%', padding: '16px', borderRadius: '10px', fontWeight: 'bold', background: loading ? '#9BB0C8' : '#E8650A', color: 'white', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '16px', marginTop: '8px' }}>
