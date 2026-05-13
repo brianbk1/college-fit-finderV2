@@ -195,7 +195,6 @@ const CollegeDecisionApp = () => {
 
   const [importance, setImportance] = useState({})
   const handleImportance = (key, level) => setImportance(prev => ({ ...prev, [key]: level }))
-  const imp = (key) => importance[key] || 'Nice to Have'
 
   const handleZipCodeSubmit = (zip) => {
     if (zip.trim()) setHomeLocation({ zip: zip.trim() })
