@@ -264,17 +264,34 @@ const CollegeDecisionApp = () => {
     if (p.careerOutcomes) criteria.push(`Strong post-graduation career outcomes${w('careers')}`)
     if (p.acceptanceRateMax < 100) criteria.push(`Acceptance rate between ${p.acceptanceRateMin}% and ${p.acceptanceRateMax}%${w('selectivity')}`)
 
+    // Build hard filters for Must Have params
+    const hardFilters = []
+    if (p.netAnnualCostMax < 80000 && (importance['cost'] === 'Must Have')) hardFilters.push(`Annual net cost MUST be under $${p.netAnnualCostMax.toLocaleString()} — exclude any college above this`)
+    if (p.totalCostMax < 300000 && (importance['totalCost'] === 'Must Have')) hardFilters.push(`Total 4-year cost MUST be under $${p.totalCostMax.toLocaleString()} — exclude any college above this`)
+    if (homeLocation && (importance['distance'] === 'Must Have')) hardFilters.push(`MUST be within ${p.distanceMax} miles of zip ${homeLocation.zip} — exclude any college outside this radius`)
+    if (p.campusSizeMax < 50000 && (importance['campusSize'] === 'Must Have')) hardFilters.push(`Enrollment MUST be under ${p.campusSizeMax.toLocaleString()} students — exclude larger schools`)
+    if (p.majorNeeded && (importance['major'] === 'Must Have')) hardFilters.push(`MUST offer strong programs in ${p.majorNeeded} — exclude schools without this`)
+    if (p.acceptanceRateMax < 100 && (importance['selectivity'] === 'Must Have')) hardFilters.push(`Acceptance rate MUST be between ${p.acceptanceRateMin}% and ${p.acceptanceRateMax}%`)
+
+    const hardFilterClause = hardFilters.length > 0
+      ? `\n\nHARD REQUIREMENTS — exclude any college that does not meet ALL of these:\n${hardFilters.map(f => `❌ ${f}`).join('\n')}\n`
+      : ''
+
     const excludeClause = excludeNames.length > 0
-      ? `\n\nDo NOT include any of these colleges already shown to the user:\n${excludeNames.map(n => `• ${n}`).join('\n')}\n`
+      ? `\nDo NOT include any of these colleges already shown:\n${excludeNames.map(n => `• ${n}`).join('\n')}\n`
       : ''
 
     const distanceClause = homeLocation
-      ? `IMPORTANT: Only include colleges that are geographically within ${p.distanceMax} miles driving distance of zip code ${homeLocation.zip}. Do not include colleges outside this radius. Be strict about this — verify each college's distance before including it.`
+      ? `\nDISTANCE: Only include colleges within ${p.distanceMax} miles of zip code ${homeLocation.zip}. Verify each college's actual distance before including it. Do not estimate — if unsure, exclude it.`
       : ''
 
-    return `You are a college counselor. Find exactly ${count} U.S. colleges matching these student preferences:
+    return `You are a college counselor helping a student find colleges. Find exactly ${count} U.S. colleges that genuinely match these preferences.
+${hardFilterClause}
+PREFERENCES (ranked by importance):
 ${criteria.length > 0 ? criteria.map(c => `• ${c}`).join('\n') : '• No specific criteria - recommend well-rounded colleges'}
 ${distanceClause}${excludeClause}
+IMPORTANT: The annualCost field in your JSON must reflect the realistic NET cost after average financial aid — not sticker price. If a college's realistic net cost exceeds the student's max budget, do not include it.
+
 Respond ONLY with a valid JSON array. No markdown, no explanation, just the raw JSON array.
 Each object must have exactly these fields:
 {
