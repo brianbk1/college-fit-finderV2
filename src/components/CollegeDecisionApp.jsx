@@ -199,32 +199,36 @@ const CollegeDecisionApp = () => {
 
   const getSortOptions = () => {
     const opts = [{ value: 'default', label: '⭐ Best Match (AI order)' }]
-    if (p.netAnnualCostMax < 80000 || p.netAnnualCostMin > 0) {
-      opts.push({ value: 'cost_asc', label: '💰 Annual Cost: Low → High' })
-      opts.push({ value: 'cost_desc', label: '💰 Annual Cost: High → Low' })
+    if (homeLocation) {
+      opts.push({ value: 'distance_asc', label: '📍 Distance: Closest First' })
+      opts.push({ value: 'distance_desc', label: '📍 Distance: Farthest First' })
     }
-    if (p.campusSizeMax < 50000 || p.campusSizeMin > 0) {
-      opts.push({ value: 'size_asc', label: '🏫 Campus Size: Small → Large' })
-      opts.push({ value: 'size_desc', label: '🏫 Campus Size: Large → Small' })
-    }
-    if (p.acceptanceRateMax < 100 || p.acceptanceRateMin > 0) {
-      opts.push({ value: 'accept_asc', label: '🎯 Acceptance Rate: Low → High' })
-      opts.push({ value: 'accept_desc', label: '🎯 Acceptance Rate: High → Low' })
-    }
-    // Always available sorts
-    opts.push({ value: 'name_asc', label: '🔤 Name: A → Z' })
+    opts.push({ value: 'cost_asc', label: '💰 Annual Cost: Low → High' })
+    opts.push({ value: 'cost_desc', label: '💰 Annual Cost: High → Low' })
+    opts.push({ value: 'size_asc', label: '🏫 Campus Size: Small → Large' })
+    opts.push({ value: 'size_desc', label: '🏫 Campus Size: Large → Small' })
     opts.push({ value: 'accept_asc', label: '🎯 Most Selective First' })
     opts.push({ value: 'accept_desc', label: '🎯 Least Selective First' })
-    opts.push({ value: 'cost_asc', label: '💰 Cheapest First' })
-    opts.push({ value: 'size_asc', label: '🏫 Smallest First' })
-    opts.push({ value: 'size_desc', label: '🏫 Largest First' })
-    // Deduplicate by value
-    return opts.filter((o, i, arr) => arr.findIndex(x => x.value === o.value) === i)
+    opts.push({ value: 'name_asc', label: '🔤 Name: A → Z' })
+    return opts
+  }
+
+  // Haversine formula — straight-line miles between two zip-derived coords
+  const getDistanceMiles = (college) => {
+    if (!homeLocation || !college.lat || !college.lng) return 99999
+    const toRad = d => d * Math.PI / 180
+    const R = 3958.8
+    const dLat = toRad(college.lat - homeLocation.lat)
+    const dLng = toRad(college.lng - homeLocation.lng)
+    const a = Math.sin(dLat/2)**2 + Math.cos(toRad(homeLocation.lat)) * Math.cos(toRad(college.lat)) * Math.sin(dLng/2)**2
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
   }
 
   const sortedResults = (list) => {
     const arr = [...list]
     switch (sortBy) {
+      case 'distance_asc': return arr.sort((a, b) => getDistanceMiles(a) - getDistanceMiles(b))
+      case 'distance_desc': return arr.sort((a, b) => getDistanceMiles(b) - getDistanceMiles(a))
       case 'cost_asc': return arr.sort((a, b) => (a.annualCost || 99999) - (b.annualCost || 99999))
       case 'cost_desc': return arr.sort((a, b) => (b.annualCost || 0) - (a.annualCost || 0))
       case 'size_asc': return arr.sort((a, b) => (a.enrollment || 99999) - (b.enrollment || 99999))
@@ -236,8 +240,20 @@ const CollegeDecisionApp = () => {
     }
   }
 
-  const handleZipCodeSubmit = (zip) => {
-    if (zip.trim()) setHomeLocation({ zip: zip.trim() })
+  const handleZipCodeSubmit = async (zip) => {
+    if (!zip.trim()) return
+    try {
+      const res = await fetch(`https://api.zippopotam.us/us/${zip.trim()}`)
+      if (res.ok) {
+        const data = await res.json()
+        const place = data.places[0]
+        setHomeLocation({ zip: zip.trim(), lat: parseFloat(place.latitude), lng: parseFloat(place.longitude), city: place['place name'] })
+      } else {
+        setHomeLocation({ zip: zip.trim(), lat: null, lng: null })
+      }
+    } catch {
+      setHomeLocation({ zip: zip.trim(), lat: null, lng: null })
+    }
   }
 
   const buildSearchCriteriaSummary = () => {
@@ -349,7 +365,9 @@ Each object must have exactly these fields:
   "nearbyAttractions": "30 min to beach, hiking trails nearby",
   "topPrograms": "Business, Engineering, Communications",
   "fitSummary": "2-3 sentence explanation of why this college matches the student's specific criteria",
-  "whyItFits": ["reason 1 tied to their criteria", "reason 2", "reason 3"]
+  "whyItFits": ["reason 1 tied to their criteria", "reason 2", "reason 3"],
+  "lat": 40.7128,
+  "lng": -74.0060
 }`
   }
 
@@ -433,6 +451,7 @@ Each object must have exactly these fields:
         greekLife: c.greekLife || '', sportsCulture: c.sportsCulture || '',
         nearbyAttractions: c.nearbyAttractions || '', topPrograms: c.topPrograms || '',
         bio: c.fitSummary || '', whyItFits: c.whyItFits || [],
+        lat: c.lat || null, lng: c.lng || null,
       }))
     } catch { return [] }
   }
@@ -480,6 +499,7 @@ Each object must have exactly these fields:
         {college.enrollment && <span style={{ background: '#F0F4FF', color: '#1E3A5F', fontSize: '12px', padding: '5px 12px', borderRadius: '20px', border: '1px solid #C8D6EC' }}>👥 {college.enrollment.toLocaleString()} students</span>}
         {college.acceptanceRate && <span style={{ background: '#F0F4FF', color: '#1E3A5F', fontSize: '12px', padding: '5px 12px', borderRadius: '20px', border: '1px solid #C8D6EC' }}>🎯 {college.acceptanceRate}% acceptance</span>}
         {college.annualCost && <span style={{ background: '#F0F4FF', color: '#1E3A5F', fontSize: '12px', padding: '5px 12px', borderRadius: '20px', border: '1px solid #C8D6EC' }}>💰 ${college.annualCost.toLocaleString()}/yr est.</span>}
+        {college.lat && homeLocation && homeLocation.lat && (() => { const d = getDistanceMiles(college); return d < 9999 ? <span style={{ background: '#F0F4FF', color: '#1E3A5F', fontSize: '12px', padding: '5px 12px', borderRadius: '20px', border: '1px solid #C8D6EC' }}>📍 ~{Math.round(d)} mi away</span> : null })()}
         {college.weather && <span style={{ background: '#F0F4FF', color: '#1E3A5F', fontSize: '12px', padding: '5px 12px', borderRadius: '20px', border: '1px solid #C8D6EC' }}>🌤️ {college.weather}</span>}
       </div>
 
@@ -552,7 +572,7 @@ Each object must have exactly these fields:
                   style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '2px solid #C8D6EC', fontSize: '16px', color: '#1E3A5F', outline: 'none' }} />
                 <button onClick={() => handleZipCodeSubmit(zipInput)} style={{ padding: '12px 20px', borderRadius: '8px', fontWeight: 'bold', background: '#E8650A', color: 'white', border: 'none', cursor: 'pointer', fontSize: '14px' }}>Set</button>
               </div>
-              {homeLocation && <p style={{ fontSize: '12px', color: '#2E7D32', marginTop: '8px', fontWeight: 'bold' }}>✓ Location set: {homeLocation.zip}</p>}
+              {homeLocation && <p style={{ fontSize: '12px', color: '#2E7D32', marginTop: '8px', fontWeight: 'bold' }}>✓ Location set: {homeLocation.zip}{homeLocation.city ? ` (${homeLocation.city})` : ''}</p>}
             </div>
 
             {/* NAME SEARCH */}
