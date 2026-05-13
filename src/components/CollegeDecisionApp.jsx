@@ -408,6 +408,30 @@ Each object must have exactly these fields:
     setLoading(false)
   }
 
+  const applyHardFilters = (colleges) => {
+    const removed = []
+    const filtered = colleges.filter(c => {
+      // Distance filter — only if homeLocation has coords and distance is set
+      if (homeLocation?.lat && p.distanceMax < 3000 && c.lat && c.lng) {
+        const dist = getDistanceMiles(c)
+        if (dist > p.distanceMax) { removed.push(`${c.name} (~${Math.round(dist)} mi)`); return false }
+      }
+      // Cost filter — must have
+      if (importance['cost'] === 'Must Have' && p.netAnnualCostMax < 80000 && c.annualCost) {
+        if (c.annualCost > p.netAnnualCostMax) { removed.push(`${c.name} ($${c.annualCost.toLocaleString()}/yr)`); return false }
+      }
+      // Enrollment filter — must have
+      if (importance['campusSize'] === 'Must Have' && p.campusSizeMax < 50000 && c.enrollment) {
+        if (c.enrollment > p.campusSizeMax) { removed.push(`${c.name} (${c.enrollment.toLocaleString()} students)`); return false }
+      }
+      return true
+    })
+    if (removed.length > 0) {
+      setError(`ℹ️ ${removed.length} college${removed.length > 1 ? 's' : ''} removed for not meeting your Must Have filters: ${removed.join(', ')}. Click "Find More Colleges" to get replacements.`)
+    }
+    return filtered
+  }
+
   const searchByPreferences = async (findMore = false) => {
     setLoading(true); setError('')
     if (!findMore) setSearchResults([])
@@ -421,8 +445,9 @@ Each object must have exactly these fields:
       })
       if (!response.ok) throw new Error('API error ' + response.status)
       const data = await response.json()
-      const colleges = parseAIResponse(data.content[0].text)
+      let colleges = parseAIResponse(data.content[0].text)
       if (colleges.length === 0) { setError('Could not parse results. Please try again.'); setLoading(false); return }
+      colleges = applyHardFilters(colleges)
       if (findMore) {
         setSearchResults(prev => {
           const existingNames = new Set(prev.map(c => c.name.toLowerCase()))
@@ -685,7 +710,7 @@ Each object must have exactly these fields:
               </button>
             )}
 
-            {error && <div style={{ background: '#fff3cd', padding: '14px 16px', borderRadius: '10px', border: '1px solid #ffc107', color: '#856404', marginBottom: '16px', fontSize: '13px' }}>⚠️ {error}</div>}
+            {error && <div style={{ background: error.startsWith('ℹ️') ? '#E3F2FD' : '#fff3cd', padding: '14px 16px', borderRadius: '10px', border: `1px solid ${error.startsWith('ℹ️') ? '#90CAF9' : '#ffc107'}`, color: error.startsWith('ℹ️') ? '#1565C0' : '#856404', marginBottom: '16px', fontSize: '13px', lineHeight: '1.5' }}>⚠️ {error}</div>}
 
             {/* Criteria summary banner */}
             {searchResults.length > 0 && buildSearchCriteriaSummary().length > 0 && (
