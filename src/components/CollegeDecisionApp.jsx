@@ -163,6 +163,7 @@ const CollegeDecisionApp = () => {
   const [homeLocation, setHomeLocation] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [sortBy, setSortBy] = useState('default')
   const [zipInput, setZipInput] = useState('')
   const [nameSearch, setNameSearch] = useState('')
 
@@ -195,6 +196,45 @@ const CollegeDecisionApp = () => {
 
   const [importance, setImportance] = useState({})
   const handleImportance = (key, level) => setImportance(prev => ({ ...prev, [key]: level }))
+
+  const getSortOptions = () => {
+    const opts = [{ value: 'default', label: '⭐ Best Match (AI order)' }]
+    if (p.netAnnualCostMax < 80000 || p.netAnnualCostMin > 0) {
+      opts.push({ value: 'cost_asc', label: '💰 Annual Cost: Low → High' })
+      opts.push({ value: 'cost_desc', label: '💰 Annual Cost: High → Low' })
+    }
+    if (p.campusSizeMax < 50000 || p.campusSizeMin > 0) {
+      opts.push({ value: 'size_asc', label: '🏫 Campus Size: Small → Large' })
+      opts.push({ value: 'size_desc', label: '🏫 Campus Size: Large → Small' })
+    }
+    if (p.acceptanceRateMax < 100 || p.acceptanceRateMin > 0) {
+      opts.push({ value: 'accept_asc', label: '🎯 Acceptance Rate: Low → High' })
+      opts.push({ value: 'accept_desc', label: '🎯 Acceptance Rate: High → Low' })
+    }
+    // Always available sorts
+    opts.push({ value: 'name_asc', label: '🔤 Name: A → Z' })
+    opts.push({ value: 'accept_asc', label: '🎯 Most Selective First' })
+    opts.push({ value: 'accept_desc', label: '🎯 Least Selective First' })
+    opts.push({ value: 'cost_asc', label: '💰 Cheapest First' })
+    opts.push({ value: 'size_asc', label: '🏫 Smallest First' })
+    opts.push({ value: 'size_desc', label: '🏫 Largest First' })
+    // Deduplicate by value
+    return opts.filter((o, i, arr) => arr.findIndex(x => x.value === o.value) === i)
+  }
+
+  const sortedResults = (list) => {
+    const arr = [...list]
+    switch (sortBy) {
+      case 'cost_asc': return arr.sort((a, b) => (a.annualCost || 99999) - (b.annualCost || 99999))
+      case 'cost_desc': return arr.sort((a, b) => (b.annualCost || 0) - (a.annualCost || 0))
+      case 'size_asc': return arr.sort((a, b) => (a.enrollment || 99999) - (b.enrollment || 99999))
+      case 'size_desc': return arr.sort((a, b) => (b.enrollment || 0) - (a.enrollment || 0))
+      case 'accept_asc': return arr.sort((a, b) => (a.acceptanceRate || 99) - (b.acceptanceRate || 99))
+      case 'accept_desc': return arr.sort((a, b) => (b.acceptanceRate || 0) - (a.acceptanceRate || 0))
+      case 'name_asc': return arr.sort((a, b) => a.name.localeCompare(b.name))
+      default: return arr
+    }
+  }
 
   const handleZipCodeSubmit = (zip) => {
     if (zip.trim()) setHomeLocation({ zip: zip.trim() })
@@ -641,12 +681,28 @@ Each object must have exactly these fields:
 
             {searchResults.length > 0 && (
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <h3 style={{ fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', margin: 0 }}>🎓 {searchResults.length} Colleges Found</h3>
-                  <button onClick={() => exportToCSV(searchResults)} style={{ padding: '8px 14px', borderRadius: '20px', fontWeight: 'bold', background: '#F5A623', color: 'white', border: 'none', cursor: 'pointer', fontSize: '12px' }}>📥 CSV</button>
+                {/* Results header with sort */}
+                <div style={{ background: 'white', borderRadius: '12px', padding: '12px 16px', marginBottom: '12px', border: '1px solid #C8D6EC', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', margin: 0 }}>🎓 {searchResults.length} Colleges Found</h3>
+                    <button onClick={() => exportToCSV(searchResults)} style={{ padding: '8px 14px', borderRadius: '20px', fontWeight: 'bold', background: '#F5A623', color: 'white', border: 'none', cursor: 'pointer', fontSize: '12px' }}>📥 CSV</button>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <label style={{ fontSize: '12px', fontWeight: 'bold', color: '#5C7A9F', whiteSpace: 'nowrap' }}>Sort by:</label>
+                    <select
+                      value={sortBy}
+                      onChange={e => setSortBy(e.target.value)}
+                      style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '2px solid #C8D6EC', fontSize: '13px', color: '#1E3A5F', background: 'white', outline: 'none', cursor: 'pointer' }}
+                    >
+                      {getSortOptions().map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  {searchResults.map((college, rank) => <CollegeCard key={college.id} college={college} rank={rank} />)}
+                  {sortedResults(searchResults).map((college, rank) => <CollegeCard key={college.id} college={college} rank={rank} />)}
                 </div>
 
                 {/* Find More button */}
