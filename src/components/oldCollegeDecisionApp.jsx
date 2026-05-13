@@ -72,13 +72,7 @@ const ToggleChip = ({ label, emoji, valueKey, values, onChange }) => {
 }
 
 // ─── MIN/MAX INPUT ────────────────────────────────────────────
-const MinMaxInput = ({ label, minKey, maxKey, prefix = '', suffix = '', placeholder_min, placeholder_max, values, onChange }) => {
-  const handleChange = (key, raw) => {
-    const stripped = raw.replace(/[^0-9]/g, '').replace(/^0+(?=\d)/, '')
-    onChange(key, stripped === '' ? 0 : parseInt(stripped))
-  }
-  const display = (v) => (v === 0 || v === '') ? '' : String(v)
-  return (
+const MinMaxInput = ({ label, minKey, maxKey, prefix = '', suffix = '', placeholder_min, placeholder_max, values, onChange }) => (
   <div style={{ marginBottom: '24px' }}>
     <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', display: 'block', marginBottom: '10px' }}>{label}</label>
     <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: '8px' }}>
@@ -86,10 +80,12 @@ const MinMaxInput = ({ label, minKey, maxKey, prefix = '', suffix = '', placehol
         <p style={{ fontSize: '10px', color: '#5C7A9F', margin: '0 0 4px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Min</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           {prefix && <span style={{ color: '#5C7A9F', fontSize: '14px' }}>{prefix}</span>}
-          <input type="text" inputMode="numeric" pattern="[0-9]*"
-            value={display(values[minKey])} onChange={e => handleChange(minKey, e.target.value)}
-            placeholder={placeholder_min || 'Any'}
-            style={{ width: '100%', border: 'none', outline: 'none', fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', background: 'transparent', fontFamily: 'inherit' }} />
+          <input
+            type="number" value={values[minKey] === 0 ? '' : values[minKey]}
+            onChange={e => onChange(minKey, e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
+            placeholder={placeholder_min || '0'}
+            style={{ width: '100%', border: 'none', outline: 'none', fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', background: 'transparent', fontFamily: 'inherit' }}
+          />
           {suffix && <span style={{ color: '#5C7A9F', fontSize: '13px', whiteSpace: 'nowrap' }}>{suffix}</span>}
         </div>
       </div>
@@ -98,17 +94,18 @@ const MinMaxInput = ({ label, minKey, maxKey, prefix = '', suffix = '', placehol
         <p style={{ fontSize: '10px', color: '#5C7A9F', margin: '0 0 4px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Max</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           {prefix && <span style={{ color: '#5C7A9F', fontSize: '14px' }}>{prefix}</span>}
-          <input type="text" inputMode="numeric" pattern="[0-9]*"
-            value={display(values[maxKey])} onChange={e => handleChange(maxKey, e.target.value)}
+          <input
+            type="number" value={values[maxKey]}
+            onChange={e => onChange(maxKey, e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
             placeholder={placeholder_max || 'Any'}
-            style={{ width: '100%', border: 'none', outline: 'none', fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', background: 'transparent', fontFamily: 'inherit' }} />
+            style={{ width: '100%', border: 'none', outline: 'none', fontSize: '15px', fontWeight: 'bold', color: '#1E3A5F', background: 'transparent', fontFamily: 'inherit' }}
+          />
           {suffix && <span style={{ color: '#5C7A9F', fontSize: '13px', whiteSpace: 'nowrap' }}>{suffix}</span>}
         </div>
       </div>
     </div>
   </div>
-  )
-}
+)
 
 // ─── TEXT INPUT ───────────────────────────────────────────────
 const TextInput = ({ label, valueKey, placeholder, values, onChange }) => (
@@ -119,32 +116,6 @@ const TextInput = ({ label, valueKey, placeholder, values, onChange }) => (
       style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '2px solid #C8D6EC', boxSizing: 'border-box', color: '#1E3A5F', fontSize: '14px', outline: 'none' }} />
   </div>
 )
-
-// ─── IMPORTANCE SELECTOR ─────────────────────────────────────
-const ImportanceSelector = ({ paramKey, importance, onChange }) => {
-  const levels = [
-    { value: 'Must Have', emoji: '🔴', color: '#C62828' },
-    { value: 'Nice to Have', emoji: '🟡', color: '#F5A623' },
-    { value: 'Not Important', emoji: '⚪', color: '#9BB0C8' },
-  ]
-  const current = importance[paramKey] || 'Nice to Have'
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px', marginBottom: '4px' }}>
-      <span style={{ fontSize: '11px', color: '#5C7A9F', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.4px', whiteSpace: 'nowrap' }}>Importance:</span>
-      <div style={{ display: 'flex', gap: '4px' }}>
-        {levels.map(l => (
-          <button key={l.value} onClick={() => onChange(paramKey, l.value)} style={{
-            padding: '4px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: current === l.value ? 'bold' : 'normal',
-            background: current === l.value ? l.color : 'white',
-            color: current === l.value ? 'white' : '#5C7A9F',
-            border: `1.5px solid ${current === l.value ? l.color : '#C8D6EC'}`,
-            cursor: 'pointer', whiteSpace: 'nowrap'
-          }}>{l.emoji} {l.value}</button>
-        ))}
-      </div>
-    </div>
-  )
-}
 
 // ─── SECTION HEADER ───────────────────────────────────────────
 const SectionHeader = ({ emoji, title }) => (
@@ -193,95 +164,65 @@ const CollegeDecisionApp = () => {
 
   const handleP = (key, value) => setP(prev => ({ ...prev, [key]: value }))
 
-  const [importance, setImportance] = useState({})
-  const handleImportance = (key, level) => setImportance(prev => ({ ...prev, [key]: level }))
-  const imp = (key) => importance[key] || 'Nice to Have'
-  const impLabel = (key) => {
-    const v = imp(key)
-    if (v === 'Must Have') return ' [MUST HAVE]'
-    if (v === 'Not Important') return ' [LOW PRIORITY]'
-    return ''
-  }
-
   const handleZipCodeSubmit = (zip) => {
     if (zip.trim()) setHomeLocation({ zip: zip.trim() })
   }
 
   const buildSearchCriteriaSummary = () => {
     const tags = []
-    const badge = (key) => {
-      const v = importance[key] || 'Nice to Have'
-      if (v === 'Must Have') return ' 🔴'
-      if (v === 'Not Important') return ' ⚪'
-      return ' 🟡'
-    }
-    if (p.netAnnualCostMax < 80000) tags.push(`💰 Cost $${p.netAnnualCostMin.toLocaleString()}–$${p.netAnnualCostMax.toLocaleString()}/yr${badge('cost')}`)
-    if (p.totalCostMax < 300000) tags.push(`💰 4-yr $${p.totalCostMin.toLocaleString()}–$${p.totalCostMax.toLocaleString()}${badge('totalCost')}`)
-    if (homeLocation) tags.push(`📍 ${p.distanceMin}–${p.distanceMax} mi of ${homeLocation.zip}${badge('distance')}`)
-    if (p.settingTypes.length) tags.push(`🏙️ ${p.settingTypes.join(', ')}${badge('setting')}`)
-    if (p.weatherTypes.length) tags.push(`🌤️ ${p.weatherTypes.join(', ')}${badge('weather')}`)
-    if (p.beachAccess) tags.push(`🏖️ Beach access${badge('outdoorAccess')}`)
-    if (p.mountainAccess) tags.push(`⛷️ Mountains${badge('outdoorAccess')}`)
-    if (p.lakeAccess) tags.push(`🏞️ Lake/water${badge('outdoorAccess')}`)
-    if (p.campusSizeMax < 50000) tags.push(`🏫 ${p.campusSizeMin.toLocaleString()}–${p.campusSizeMax.toLocaleString()} students${badge('campusSize')}`)
-    if (p.avgClassSizeMax < 500) tags.push(`📖 Class size ${p.avgClassSizeMin}–${p.avgClassSizeMax}${badge('classSize')}`)
-    if (p.recreationCenter) tags.push(`🏊 Rec center${badge('recreationCenter')}`)
-    if (p.sportsLevels.length) tags.push(`🏈 Sports: ${p.sportsLevels.join('/')}${badge('sports')}`)
-    if (p.greekLifeLevels.length) tags.push(`🏛️ Greek: ${p.greekLifeLevels.join('/')}${badge('greek')}`)
-    if (p.lgbtqInclusive.length) tags.push(`🏳️‍🌈 LGBTQ+${badge('lgbtq')}`)
-    if (p.majorNeeded) tags.push(`📚 Major: ${p.majorNeeded}${badge('major')}`)
-    if (p.minorNeeded) tags.push(`📝 Minor: ${p.minorNeeded}${badge('minor')}`)
-    if (p.businessProgram) tags.push(`💼 Business${badge('programPriorities')}`)
-    if (p.artsProgram) tags.push(`🎨 Arts${badge('programPriorities')}`)
-    if (p.internshipAccess) tags.push(`🤝 Internships${badge('programPriorities')}`)
-    if (p.careerOutcomes) tags.push(`🚀 Careers${badge('programPriorities')}`)
-    if (p.acceptanceRateMax < 100) tags.push(`🎯 ${p.acceptanceRateMin}–${p.acceptanceRateMax}% acceptance${badge('selectivity')}`)
+    if (p.netAnnualCostMax < 80000) tags.push(`💰 Cost $${p.netAnnualCostMin.toLocaleString()}–$${p.netAnnualCostMax.toLocaleString()}/yr`)
+    if (p.totalCostMax < 300000) tags.push(`💰 4-yr $${p.totalCostMin.toLocaleString()}–$${p.totalCostMax.toLocaleString()}`)
+    if (homeLocation) tags.push(`📍 ${p.distanceMin}–${p.distanceMax} mi of ${homeLocation.zip}`)
+    if (p.settingTypes.length) tags.push(`🏙️ ${p.settingTypes.join(', ')}`)
+    if (p.weatherTypes.length) tags.push(`🌤️ ${p.weatherTypes.join(', ')}`)
+    if (p.beachAccess) tags.push('🏖️ Beach access')
+    if (p.mountainAccess) tags.push('⛷️ Mountains/skiing')
+    if (p.lakeAccess) tags.push('🏞️ Lake/water')
+    if (p.campusSizeMax < 50000) tags.push(`🏫 Under ${p.campusSizeMax.toLocaleString()} students`)
+    if (p.avgClassSizeMax < 500) tags.push(`📖 Class size under ${p.avgClassSizeMax}`)
+    if (p.recreationCenter) tags.push('🏊 Rec center')
+    if (p.sportsLevels.length) tags.push(`🏈 Sports: ${p.sportsLevels.join('/')}`)
+    if (p.greekLifeLevels.length) tags.push(`🏛️ Greek: ${p.greekLifeLevels.join('/')}`)
+    if (p.lgbtqInclusive.length) tags.push('🏳️‍🌈 LGBTQ+ inclusive')
+    if (p.majorNeeded) tags.push(`📚 Major: ${p.majorNeeded}`)
+    if (p.minorNeeded) tags.push(`📝 Minor: ${p.minorNeeded}`)
+    if (p.businessProgram) tags.push('💼 Business program')
+    if (p.artsProgram) tags.push('🎨 Arts program')
+    if (p.internshipAccess) tags.push('🤝 Internships')
+    if (p.careerOutcomes) tags.push('🚀 Career outcomes')
+    if (p.acceptanceRateMax < 100) tags.push(`🎯 Accept rate ~${p.acceptanceRateMax}%+`)
     return tags
   }
 
-  const buildSearchPrompt = (count = 15, excludeNames = []) => {
+  const buildSearchPrompt = () => {
     const criteria = []
-    const w = (key) => {
-      const v = importance[key] || 'Nice to Have'
-      if (v === 'Must Have') return ' — THIS IS A MUST HAVE, do not include colleges that don\'t meet this'
-      if (v === 'Not Important') return ' — low priority, nice if available'
-      return ' — preferred'
-    }
-    if (p.netAnnualCostMax < 80000) criteria.push(`Annual net cost between $${p.netAnnualCostMin.toLocaleString()} and $${p.netAnnualCostMax.toLocaleString()}${w('cost')}`)
-    if (p.totalCostMax < 300000) criteria.push(`Total 4-year cost between $${p.totalCostMin.toLocaleString()} and $${p.totalCostMax.toLocaleString()}${w('totalCost')}`)
-    if (homeLocation) criteria.push(`Between ${p.distanceMin} and ${p.distanceMax} miles from zip code ${homeLocation.zip}${w('distance')}`)
-    if (p.settingTypes.length) criteria.push(`Setting preference: ${p.settingTypes.join(' or ')}${w('setting')}`)
-    if (p.weatherTypes.length) criteria.push(`Climate preference: ${p.weatherTypes.join(' or ')}${w('weather')}`)
-    if (p.beachAccess) criteria.push(`Beach or coastal access within 30-45 minutes${w('beachAccess')}`)
-    if (p.mountainAccess) criteria.push(`Mountain or skiing access nearby${w('mountainAccess')}`)
-    if (p.lakeAccess) criteria.push(`Lake or water access nearby${w('lakeAccess')}`)
-    if (p.campusSizeMax < 50000) criteria.push(`Undergraduate enrollment between ${p.campusSizeMin.toLocaleString()} and ${p.campusSizeMax.toLocaleString()}${w('campusSize')}`)
-    if (p.avgClassSizeMax < 500) criteria.push(`Average class size between ${p.avgClassSizeMin} and ${p.avgClassSizeMax} students${w('classSize')}`)
-    if (p.carOnCampus.length) criteria.push(`Freshman car policy: ${p.carOnCampus.join(' or ')}${w('carOnCampus')}`)
-    if (p.recreationCenter) criteria.push(`Pool/recreation center on campus${w('recreationCenter')}`)
-    if (p.sportsLevels.length) criteria.push(`Sports culture level: ${p.sportsLevels.join(' or ')}${w('sports')}`)
-    if (p.spiritLevels.length) criteria.push(`School spirit level: ${p.spiritLevels.join(' or ')}${w('spirit')}`)
-    if (p.greekLifeLevels.length) criteria.push(`Greek life presence: ${p.greekLifeLevels.join(' or ')}${w('greek')}`)
-    if (p.lgbtqInclusive.length) criteria.push(`LGBTQ+ inclusive and welcoming campus${w('lgbtq')}`)
-    if (p.majorNeeded) criteria.push(`Strong major programs in: ${p.majorNeeded}${w('major')}`)
-    if (p.minorNeeded) criteria.push(`Minor in: ${p.minorNeeded}${w('minor')}`)
-    if (p.businessProgram) criteria.push(`Strong business/entrepreneurship programs${w('business')}`)
-    if (p.artsProgram) criteria.push(`Strong arts and design programs${w('arts')}`)
-    if (p.internshipAccess) criteria.push(`Good internship access and opportunities${w('internships')}`)
-    if (p.careerOutcomes) criteria.push(`Strong post-graduation career outcomes${w('careers')}`)
-    if (p.acceptanceRateMax < 100) criteria.push(`Acceptance rate between ${p.acceptanceRateMin}% and ${p.acceptanceRateMax}%${w('selectivity')}`)
+    if (p.netAnnualCostMax < 80000) criteria.push(`Annual net cost between $${p.netAnnualCostMin.toLocaleString()} and $${p.netAnnualCostMax.toLocaleString()}`)
+    if (p.totalCostMax < 300000) criteria.push(`Total 4-year cost between $${p.totalCostMin.toLocaleString()} and $${p.totalCostMax.toLocaleString()}`)
+    if (homeLocation) criteria.push(`Between ${p.distanceMin} and ${p.distanceMax} miles from zip code ${homeLocation.zip}`)
+    if (p.settingTypes.length) criteria.push(`Setting preference: ${p.settingTypes.join(' or ')}`)
+    if (p.weatherTypes.length) criteria.push(`Climate preference: ${p.weatherTypes.join(' or ')}`)
+    if (p.beachAccess) criteria.push('Beach or coastal access within 30-45 minutes')
+    if (p.mountainAccess) criteria.push('Mountain or skiing access nearby')
+    if (p.lakeAccess) criteria.push('Lake or water access nearby')
+    if (p.campusSizeMax < 50000) criteria.push(`Undergraduate enrollment between ${p.campusSizeMin.toLocaleString()} and ${p.campusSizeMax.toLocaleString()}`)
+    if (p.avgClassSizeMax < 500) criteria.push(`Average class size between ${p.avgClassSizeMin} and ${p.avgClassSizeMax} students`)
+    if (p.carOnCampus.length) criteria.push(`Freshman car policy: ${p.carOnCampus.join(' or ')}`)
+    if (p.recreationCenter) criteria.push('Pool/recreation center on campus')
+    if (p.sportsLevels.length) criteria.push(`Sports culture level: ${p.sportsLevels.join(' or ')}`)
+    if (p.spiritLevels.length) criteria.push(`School spirit level: ${p.spiritLevels.join(' or ')}`)
+    if (p.greekLifeLevels.length) criteria.push(`Greek life presence: ${p.greekLifeLevels.join(' or ')}`)
+    if (p.lgbtqInclusive.length) criteria.push('LGBTQ+ inclusive and welcoming campus')
+    if (p.majorNeeded) criteria.push(`Strong major programs in: ${p.majorNeeded}`)
+    if (p.minorNeeded) criteria.push(`Minor in: ${p.minorNeeded}`)
+    if (p.businessProgram) criteria.push('Strong business/entrepreneurship programs')
+    if (p.artsProgram) criteria.push('Strong arts and design programs')
+    if (p.internshipAccess) criteria.push('Good internship access and opportunities')
+    if (p.careerOutcomes) criteria.push('Strong post-graduation career outcomes')
+    if (p.acceptanceRateMax < 100) criteria.push(`Acceptance rate around ${p.acceptanceRateMax}% or higher`)
 
-    const excludeClause = excludeNames.length > 0
-      ? `\n\nDo NOT include any of these colleges already shown to the user:\n${excludeNames.map(n => `• ${n}`).join('\n')}\n`
-      : ''
-
-    const distanceClause = homeLocation
-      ? `IMPORTANT: Only include colleges that are geographically within ${p.distanceMax} miles driving distance of zip code ${homeLocation.zip}. Do not include colleges outside this radius. Be strict about this — verify each college's distance before including it.`
-      : ''
-
-    return `You are a college counselor. Find exactly ${count} U.S. colleges matching these student preferences:
+    return `You are a college counselor. Find 8-10 U.S. colleges matching these student preferences:
 ${criteria.length > 0 ? criteria.map(c => `• ${c}`).join('\n') : '• No specific criteria - recommend well-rounded colleges'}
-${distanceClause}${excludeClause}
+
 Respond ONLY with a valid JSON array. No markdown, no explanation, just the raw JSON array.
 Each object must have exactly these fields:
 {
@@ -340,31 +281,20 @@ Each object must have exactly these fields:
     setLoading(false)
   }
 
-  const searchByPreferences = async (findMore = false) => {
-    setLoading(true); setError('')
-    if (!findMore) setSearchResults([])
-    const excludeNames = findMore ? searchResults.map(c => c.name) : []
-    const prompt = buildSearchPrompt(15, excludeNames)
+  const searchByPreferences = async () => {
+    setLoading(true); setError(''); setSearchResults([])
+    const prompt = buildSearchPrompt()
     try {
       const response = await fetch('/api/claude', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-opus-4-5', max_tokens: 6000, messages: [{ role: 'user', content: prompt }] })
+        body: JSON.stringify({ model: 'claude-opus-4-5', max_tokens: 4000, messages: [{ role: 'user', content: prompt }] })
       })
       if (!response.ok) throw new Error('API error ' + response.status)
       const data = await response.json()
       const colleges = parseAIResponse(data.content[0].text)
       if (colleges.length === 0) { setError('Could not parse results. Please try again.'); setLoading(false); return }
-      if (findMore) {
-        setSearchResults(prev => {
-          const existingNames = new Set(prev.map(c => c.name.toLowerCase()))
-          const newOnes = colleges.filter(c => !existingNames.has(c.name.toLowerCase()))
-            .map((c, i) => ({ ...c, id: `ai-more-${Date.now()}-${i}` }))
-          return [...prev, ...newOnes]
-        })
-      } else {
-        setSearchResults(colleges)
-      }
+      setSearchResults(colleges)
     } catch {
       setError('AI search service unavailable. Make sure your API key is set (REACT_APP_ANTHROPIC_API_KEY) in Vercel Environment Variables.')
     }
@@ -532,57 +462,41 @@ Each object must have exactly these fields:
 
                   <SectionHeader emoji="💰" title="Costs" />
                   <MinMaxInput label="Annual Net Cost" minKey="netAnnualCostMin" maxKey="netAnnualCostMax" prefix="$" placeholder_min="0" placeholder_max="80000" values={p} onChange={handleP} />
-                  <ImportanceSelector paramKey="cost" importance={importance} onChange={handleImportance} />
                   <MinMaxInput label="Total 4-Year Cost" minKey="totalCostMin" maxKey="totalCostMax" prefix="$" placeholder_min="0" placeholder_max="300000" values={p} onChange={handleP} />
-                  <ImportanceSelector paramKey="totalCost" importance={importance} onChange={handleImportance} />
 
                   <SectionHeader emoji="📍" title="Location & Environment" />
                   <MinMaxInput label="Distance from Home" minKey="distanceMin" maxKey="distanceMax" suffix="miles" placeholder_min="0" placeholder_max="3000" values={p} onChange={handleP} />
-                  <ImportanceSelector paramKey="distance" importance={importance} onChange={handleImportance} />
                   <PillSelect label="Campus Setting (select all that apply)" valueKey="settingTypes" options={['City', 'Suburban', 'College Town', 'Rural']} values={p} onChange={handleP} />
-                  <ImportanceSelector paramKey="setting" importance={importance} onChange={handleImportance} />
                   <PillSelect label="Climate Preference (select all that apply)" valueKey="weatherTypes" options={['Cold/Snowy', 'Mild/Temperate', 'Warm/Hot']} values={p} onChange={handleP} />
-                  <ImportanceSelector paramKey="weather" importance={importance} onChange={handleImportance} />
-                  <div style={{ marginBottom: '8px' }}>
+                  <div style={{ marginBottom: '20px' }}>
                     <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', display: 'block', marginBottom: '10px' }}>Outdoor Access (tap all that apply)</label>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                       <ToggleChip label="Beach" emoji="🏖️" valueKey="beachAccess" values={p} onChange={handleP} />
                       <ToggleChip label="Mountains/Skiing" emoji="⛷️" valueKey="mountainAccess" values={p} onChange={handleP} />
                       <ToggleChip label="Lake/Water" emoji="🏞️" valueKey="lakeAccess" values={p} onChange={handleP} />
                     </div>
-                    {(p.beachAccess || p.mountainAccess || p.lakeAccess) && <ImportanceSelector paramKey="outdoorAccess" importance={importance} onChange={handleImportance} />}
                   </div>
 
                   <SectionHeader emoji="🏫" title="Campus Life" />
                   <MinMaxInput label="Campus Size" minKey="campusSizeMin" maxKey="campusSizeMax" suffix="students" placeholder_min="0" placeholder_max="50000" values={p} onChange={handleP} />
-                  <ImportanceSelector paramKey="campusSize" importance={importance} onChange={handleImportance} />
                   <MinMaxInput label="Average Class Size" minKey="avgClassSizeMin" maxKey="avgClassSizeMax" suffix="students" placeholder_min="5" placeholder_max="500" values={p} onChange={handleP} />
-                  <ImportanceSelector paramKey="classSize" importance={importance} onChange={handleImportance} />
                   <PillSelect label="Sports Culture" valueKey="sportsLevels" options={['Low', 'Moderate', 'High']} values={p} onChange={handleP} />
-                  {p.sportsLevels.length > 0 && <ImportanceSelector paramKey="sports" importance={importance} onChange={handleImportance} />}
                   <PillSelect label="School Spirit" valueKey="spiritLevels" options={['Low', 'Moderate', 'High']} values={p} onChange={handleP} />
-                  {p.spiritLevels.length > 0 && <ImportanceSelector paramKey="spirit" importance={importance} onChange={handleImportance} />}
                   <PillSelect label="Greek Life" valueKey="greekLifeLevels" options={['Not Present', 'Small', 'Moderate', 'Large']} values={p} onChange={handleP} />
-                  {p.greekLifeLevels.length > 0 && <ImportanceSelector paramKey="greek" importance={importance} onChange={handleImportance} />}
                   <PillSelect label="Freshman Cars on Campus" valueKey="carOnCampus" options={['Allowed', 'Not Allowed', "Don't Care"]} values={p} onChange={handleP} />
-                  {p.carOnCampus.length > 0 && <ImportanceSelector paramKey="carOnCampus" importance={importance} onChange={handleImportance} />}
                   <div style={{ marginBottom: '20px' }}>
                     <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', display: 'block', marginBottom: '10px' }}>Campus Amenities</label>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                       <ToggleChip label="Pool / Rec Center" emoji="🏊" valueKey="recreationCenter" values={p} onChange={handleP} />
                     </div>
-                    {p.recreationCenter && <ImportanceSelector paramKey="recreationCenter" importance={importance} onChange={handleImportance} />}
                   </div>
 
                   <SectionHeader emoji="👥" title="Student Body" />
                   <PillSelect label="LGBTQ+ Inclusiveness" valueKey="lgbtqInclusive" options={['Important', 'Very Important']} values={p} onChange={handleP} />
-                  {p.lgbtqInclusive.length > 0 && <ImportanceSelector paramKey="lgbtq" importance={importance} onChange={handleImportance} />}
 
                   <SectionHeader emoji="📚" title="Academic Programs" />
                   <TextInput label="Major I Need" valueKey="majorNeeded" placeholder="e.g. Business, Nursing, Film" values={p} onChange={handleP} />
-                  {p.majorNeeded && <ImportanceSelector paramKey="major" importance={importance} onChange={handleImportance} />}
                   <TextInput label="Minor I'd Like" valueKey="minorNeeded" placeholder="Optional" values={p} onChange={handleP} />
-                  {p.minorNeeded && <ImportanceSelector paramKey="minor" importance={importance} onChange={handleImportance} />}
                   <div style={{ marginBottom: '20px' }}>
                     <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', display: 'block', marginBottom: '10px' }}>Program Priorities (tap all that apply)</label>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -591,12 +505,10 @@ Each object must have exactly these fields:
                       <ToggleChip label="Internship Access" emoji="🤝" valueKey="internshipAccess" values={p} onChange={handleP} />
                       <ToggleChip label="Career Outcomes" emoji="🚀" valueKey="careerOutcomes" values={p} onChange={handleP} />
                     </div>
-                    {(p.businessProgram || p.artsProgram || p.internshipAccess || p.careerOutcomes) && <ImportanceSelector paramKey="programPriorities" importance={importance} onChange={handleImportance} />}
                   </div>
 
                   <SectionHeader emoji="🎯" title="Selectivity" />
                   <MinMaxInput label="Acceptance Rate" minKey="acceptanceRateMin" maxKey="acceptanceRateMax" suffix="%" placeholder_min="0" placeholder_max="100" values={p} onChange={handleP} />
-                  <ImportanceSelector paramKey="selectivity" importance={importance} onChange={handleImportance} />
 
                   {/* Find Colleges button inside panel */}
                   <button onClick={searchByPreferences} disabled={loading} style={{ width: '100%', padding: '16px', borderRadius: '10px', fontWeight: 'bold', background: loading ? '#9BB0C8' : '#E8650A', color: 'white', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '16px', marginTop: '8px' }}>
@@ -638,16 +550,6 @@ Each object must have exactly these fields:
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {searchResults.map((college, rank) => <CollegeCard key={college.id} college={college} rank={rank} />)}
                 </div>
-
-                {/* Find More button */}
-                <button
-                  onClick={() => searchByPreferences(true)}
-                  disabled={loading}
-                  style={{ width: '100%', marginTop: '20px', padding: '16px', borderRadius: '10px', fontWeight: 'bold', background: loading ? '#9BB0C8' : 'white', color: loading ? 'white' : '#1E3A5F', border: '2px solid #1E3A5F', cursor: loading ? 'not-allowed' : 'pointer', fontSize: '15px' }}
-                >
-                  {loading ? '🔍 Finding more...' : '➕ Find More Colleges'}
-                </button>
-                <p style={{ fontSize: '11px', color: '#5C7A9F', textAlign: 'center', marginTop: '6px' }}>Finds 15 additional colleges not already shown</p>
               </div>
             )}
 
