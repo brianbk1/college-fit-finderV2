@@ -712,6 +712,72 @@ Each object must have exactly these fields:
 
             {error && <div style={{ background: error.startsWith('ℹ️') ? '#E3F2FD' : '#fff3cd', padding: '14px 16px', borderRadius: '10px', border: `1px solid ${error.startsWith('ℹ️') ? '#90CAF9' : '#ffc107'}`, color: error.startsWith('ℹ️') ? '#1565C0' : '#856404', marginBottom: '16px', fontSize: '13px', lineHeight: '1.5' }}>⚠️ {error}</div>}
 
+            {/* SEO Content — visible only before first search */}
+            {searchResults.length === 0 && !loading && (
+              <div style={{ marginTop: '8px' }}>
+
+                {/* Intro */}
+                <div style={{ background: 'white', borderRadius: '12px', padding: '20px', marginBottom: '12px', boxShadow: '0 1px 4px rgba(30,58,95,0.08)', border: '1px solid #C8D6EC' }}>
+                  <h1 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1E3A5F', margin: '0 0 10px' }}>Find the Right College for You</h1>
+                  <p style={{ fontSize: '13px', color: '#5C7A9F', lineHeight: 1.7, margin: 0 }}>
+                    College Fit Finder helps high school students and families discover colleges that match their academic profile,
+                    budget, location preferences, campus size, and lifestyle. Set your filters — from SAT scores and tuition range
+                    to weather, Greek life, and sports — and let AI find colleges that genuinely fit. Search by name or let the
+                    tool surface schools you haven't considered yet.
+                  </p>
+                </div>
+
+                {/* How It Works */}
+                <div style={{ background: 'white', borderRadius: '12px', padding: '20px', marginBottom: '12px', boxShadow: '0 1px 4px rgba(30,58,95,0.08)', border: '1px solid #C8D6EC' }}>
+                  <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: '#E8650A', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 14px' }}>How It Works</h2>
+                  {[
+                    { icon: '📍', title: 'Set your location', desc: 'Enter your zip code to filter colleges by distance from home — helpful for students who want to stay close or explore a specific region.' },
+                    { icon: '🎛', title: 'Choose your filters', desc: 'Set preferences for tuition, enrollment size, acceptance rate, campus setting, majors, weather, athletics, and more.' },
+                    { icon: '🤖', title: 'Get AI recommendations', desc: 'Our AI college counselor finds schools that match your criteria — including colleges you may not have heard of.' },
+                    { icon: '★', title: 'Save and compare', desc: 'Save colleges to your list, sort by fit score or distance, and export to CSV for sharing with parents or counselors.' },
+                  ].map((step, i) => (
+                    <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: i < 3 ? '14px' : 0 }}>
+                      <span style={{ fontSize: '20px', flexShrink: 0 }}>{step.icon}</span>
+                      <div>
+                        <p style={{ fontSize: '13px', fontWeight: 'bold', color: '#1E3A5F', margin: '0 0 2px' }}>{step.title}</p>
+                        <p style={{ fontSize: '12px', color: '#5C7A9F', margin: 0, lineHeight: 1.5 }}>{step.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Popular searches */}
+                <div style={{ background: 'white', borderRadius: '12px', padding: '20px', marginBottom: '12px', boxShadow: '0 1px 4px rgba(30,58,95,0.08)', border: '1px solid #C8D6EC' }}>
+                  <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: '#E8650A', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 14px' }}>Popular College Searches</h2>
+                  {[
+                    { title: 'Small liberal arts colleges in New England', desc: 'Students seeking a tight-knit academic community often look at schools like Bowdoin, Colby, Middlebury, and Amherst — all offering small class sizes, strong faculty mentorship, and beautiful campuses in the Northeast.' },
+                    { title: 'Large public universities with strong engineering programs', desc: 'Flagship state schools like Georgia Tech, University of Michigan, Purdue, and Penn State are top choices for engineering students seeking research opportunities, strong alumni networks, and affordable in-state tuition.' },
+                    { title: 'Affordable colleges with high acceptance rates', desc: 'Many students prioritize value and accessibility. Regional universities, community colleges with transfer pathways, and schools with strong merit aid programs offer excellent educations at a fraction of the cost of elite institutions.' },
+                    { title: 'Colleges with strong pre-med or nursing programs', desc: 'Pre-health students often target schools with dedicated advising, research hospital affiliations, and strong medical school acceptance rates. Schools like Wake Forest, University of Pittsburgh, and Villanova are popular choices.' },
+                    { title: 'Beach or warm-weather colleges in the South and West', desc: 'Students seeking sunshine look at schools in Florida, California, Texas, and the Carolinas — from University of Miami and Florida State to USC, UCSB, and University of San Diego.' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ borderLeft: '3px solid #1E3A5F', paddingLeft: '14px', marginBottom: i < 4 ? '14px' : 0 }}>
+                      <p style={{ fontSize: '13px', fontWeight: 'bold', color: '#1E3A5F', margin: '0 0 4px' }}>{item.title}</p>
+                      <p style={{ fontSize: '12px', color: '#5C7A9F', margin: 0, lineHeight: 1.6 }}>{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* About */}
+                <div style={{ background: 'linear-gradient(135deg, #1E3A5F 0%, #2E5F8A 100%)', borderRadius: '12px', padding: '20px' }}>
+                  <h2 style={{ fontSize: '13px', fontWeight: 'bold', color: '#F5A623', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 10px' }}>About College Fit Finder</h2>
+                  <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.85)', lineHeight: 1.7, margin: 0 }}>
+                    College Fit Finder is a free AI-powered college search tool built for students and families navigating the college
+                    admissions process. Unlike generic college ranking lists, our tool lets you define what matters most — cost,
+                    location, campus culture, academics, athletics — and surfaces schools that actually match your priorities.
+                    Whether you're a high school junior starting your search or a senior finalizing your list, College Fit Finder
+                    helps you find schools where you'll thrive, not just survive.
+                  </p>
+                </div>
+
+              </div>
+            )}
+
             {/* Criteria summary banner */}
             {searchResults.length > 0 && buildSearchCriteriaSummary().length > 0 && (
               <div style={{ background: 'linear-gradient(135deg, #1E3A5F 0%, #2E5F8A 100%)', borderRadius: '12px', padding: '14px 16px', marginBottom: '16px' }}>
