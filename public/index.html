@@ -4,10 +4,15 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="College Fit Finder - Find your perfect college fit" />
+    <meta name="theme-color" content="#1E3A5F" />
+    <meta name="description" content="College Fit Finder uses AI to match students with colleges that fit their GPA, test scores, budget, location, major, and campus preferences. Free and personalized." />
+    <meta name="keywords" content="college fit finder, college search tool, find the right college, college match, best college for me, college admissions tool, AI college search, college recommendations" />
+    <meta property="og:title" content="College Fit Finder — Find Your Perfect College Match" />
+    <meta property="og:description" content="Answer a few questions about your academics, budget, and preferences — our AI matches you with colleges that actually fit." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.searchcolleges.ai/" />
     <meta name="google-adsense-account" content="ca-pub-5006125305468777" />
-    <title>College Fit Finder</title>
+    <title>College Fit Finder — AI-Powered College Search & Match Tool</title>
 
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5006125305468777" crossorigin="anonymous"></script>
@@ -20,10 +25,189 @@
       gtag('js', new Date());
       gtag('config', 'G-TQ5W9EEHH6');
     </script>
+
+    <style>
+      #seo-landing {
+        font-family: Georgia, 'Times New Roman', serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 24px 60px;
+        color: #1E3A5F;
+        background: #F7F9FC;
+      }
+      #seo-landing h1 {
+        font-size: 2.4rem;
+        font-weight: 700;
+        margin: 0 0 12px;
+        line-height: 1.2;
+        color: #1E3A5F;
+      }
+      #seo-landing .tagline {
+        font-size: 1.15rem;
+        color: #5C7A9F;
+        margin: 0 0 36px;
+        line-height: 1.6;
+      }
+      #seo-landing h2 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 36px 0 12px;
+        color: #1E3A5F;
+        border-bottom: 2px solid #C8D6EC;
+        padding-bottom: 6px;
+      }
+      #seo-landing p {
+        font-size: 1rem;
+        line-height: 1.75;
+        color: #334E6E;
+        margin: 0 0 16px;
+      }
+      #seo-landing ul {
+        margin: 0 0 20px 20px;
+        padding: 0;
+      }
+      #seo-landing li {
+        font-size: 1rem;
+        line-height: 1.75;
+        color: #334E6E;
+        margin-bottom: 6px;
+      }
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin: 20px 0 36px;
+      }
+      .feature-card {
+        background: white;
+        border: 1px solid #C8D6EC;
+        border-radius: 10px;
+        padding: 20px;
+      }
+      .feature-card .icon { font-size: 1.8rem; margin-bottom: 8px; }
+      .feature-card h3 { font-size: 1rem; font-weight: 700; color: #1E3A5F; margin: 0 0 6px; }
+      .feature-card p { font-size: 0.9rem; color: #5C7A9F; margin: 0; }
+      .cta-btn {
+        display: inline-block;
+        background: #E8650A;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        padding: 14px 32px;
+        border-radius: 8px;
+        text-decoration: none;
+        margin-top: 8px;
+        cursor: pointer;
+        border: none;
+      }
+      .steps { counter-reset: step; list-style: none; margin: 0 0 20px; padding: 0; }
+      .steps li { counter-increment: step; display: flex; gap: 14px; align-items: flex-start; margin-bottom: 16px; }
+      .steps li::before { content: counter(step); background: #1E3A5F; color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; margin-top: 2px; }
+    </style>
   </head>
   <body>
+
+    <!-- SEO Content: visible to Google's crawler before React loads -->
+    <div id="seo-landing">
+
+      <h1>🎓 College Fit Finder</h1>
+      <p class="tagline">Find colleges that actually match <em>you</em> — your GPA, budget, location, major, and campus vibe. Powered by AI. Free to use.</p>
+
+      <button class="cta-btn" onclick="document.getElementById('seo-landing').style.display='none'">Start Finding Colleges →</button>
+
+      <h2>What Is College Fit Finder?</h2>
+      <p>College Fit Finder is a free AI-powered college search tool that helps high school students and families identify the best-fit colleges based on their individual academic profile, financial situation, and personal preferences. Unlike rigid college ranking lists, our tool personalizes results around what actually matters to <em>you</em>.</p>
+      <p>Students answer a short series of questions — covering academics, budget, preferred location, campus size, available majors, and lifestyle features — and our AI generates a curated list of colleges with explanations of why each school is a strong match.</p>
+
+      <h2>How It Works</h2>
+      <ol class="steps">
+        <li><span><strong>Enter your academic profile</strong> — GPA, SAT/ACT scores, and class rank help calibrate schools where you're likely to be admitted.</span></li>
+        <li><span><strong>Set your budget range</strong> — filter by annual tuition, and indicate whether you need strong financial aid or scholarship availability.</span></li>
+        <li><span><strong>Choose your preferences</strong> — select state(s), region, campus size (small/medium/large), setting (urban/suburban/rural), and majors of interest.</span></li>
+        <li><span><strong>Pick campus lifestyle features</strong> — Greek life, NCAA athletics, beach access, research opportunities, co-op programs, religious affiliation, and more.</span></li>
+        <li><span><strong>Get your AI-matched results</strong> — receive a personalized list of colleges with detailed reasoning, fit scores, and direct links to learn more.</span></li>
+      </ol>
+
+      <h2>Key Features</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="icon">🤖</div>
+          <h3>AI-Powered Matching</h3>
+          <p>Uses Claude AI to evaluate 27+ parameters and generate match explanations in plain language.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📍</div>
+          <h3>Location Filtering</h3>
+          <p>Filter by specific states, region (Northeast, South, Midwest, West), or campus setting.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">💰</div>
+          <h3>Financial Fit</h3>
+          <p>Set tuition min/max and flag whether financial aid generosity or merit scholarships matter.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📚</div>
+          <h3>Major Matching</h3>
+          <p>Specify academic interests across dozens of fields — from engineering to fine arts to nursing.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🏛️</div>
+          <h3>Campus Life</h3>
+          <p>Filter by Greek life, sports culture, religious affiliation, co-op programs, and more.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📊</div>
+          <h3>Export Results</h3>
+          <p>Download your college match list as a CSV for easy sharing with parents and counselors.</p>
+        </div>
+      </div>
+
+      <h2>Who Should Use College Fit Finder?</h2>
+      <p>College Fit Finder is designed for:</p>
+      <ul>
+        <li><strong>High school juniors and seniors</strong> beginning or narrowing their college search</li>
+        <li><strong>Parents and guardians</strong> exploring options with their student</li>
+        <li><strong>School counselors</strong> looking for a quick fit-assessment tool for students</li>
+        <li><strong>Transfer students</strong> evaluating 4-year colleges from community college</li>
+        <li><strong>International students</strong> searching for U.S. colleges that match their profile</li>
+      </ul>
+
+      <h2>Why College Fit Matters More Than College Rankings</h2>
+      <p>National college rankings — like those published by U.S. News &amp; World Report — measure prestige, endowment, and research output. They don't measure whether a specific school is right for <em>you</em>. A student who thrives at a small liberal arts college in Vermont may be miserable at a large flagship research university in Texas, and vice versa.</p>
+      <p>College "fit" is a combination of academic match (selectivity relative to your credentials), financial fit (net price after aid), social and cultural fit (campus size, setting, student culture), and academic program strength in your intended field. College Fit Finder evaluates all of these dimensions simultaneously so you get a more complete picture than any ranking can provide.</p>
+
+      <h2>Frequently Asked Questions</h2>
+      <p><strong>Is College Fit Finder free?</strong><br/>Yes, completely free to use. No account required.</p>
+      <p><strong>How accurate are the college recommendations?</strong><br/>Recommendations are generated by AI based on the preferences you input. They are intended as a starting point for research, not a guarantee of admission. Always verify details — tuition, programs, selectivity — directly with each school.</p>
+      <p><strong>How many colleges does it cover?</strong><br/>The AI draws on knowledge of hundreds of U.S. colleges and universities across all selectivity levels, from highly selective research universities to strong regional schools and liberal arts colleges.</p>
+      <p><strong>Can I use it on my phone?</strong><br/>Yes. College Fit Finder is fully mobile-responsive and works on any device.</p>
+      <p><strong>What's the difference between "reach," "match," and "safety" schools?</strong><br/>A reach school is one where your credentials fall below the typical admitted student's profile. A match school aligns closely with your GPA and test scores. A safety school is one where your credentials are above average for admitted students. A balanced college list includes all three.</p>
+
+      <h2>Start Your College Search</h2>
+      <p>Ready to find colleges that actually fit you? Click below to launch the full College Fit Finder tool and get your personalized AI-powered matches in minutes.</p>
+      <button class="cta-btn" onclick="document.getElementById('seo-landing').style.display='none'">Find My College Matches →</button>
+
+    </div>
+    <!-- End SEO Content -->
+
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <!-- Hide SEO landing once React app is ready -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var observer = new MutationObserver(function(mutations) {
+          var root = document.getElementById('root');
+          if (root && root.children.length > 0) {
+            var seo = document.getElementById('seo-landing');
+            if (seo) seo.style.display = 'none';
+            observer.disconnect();
+          }
+        });
+        observer.observe(document.getElementById('root'), { childList: true, subtree: false });
+      });
+    </script>
+
     <script defer src="/_vercel/insights/script.js"></script>
   </body>
 </html>
