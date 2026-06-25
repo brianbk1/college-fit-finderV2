@@ -303,9 +303,20 @@
           if (root && root.children.length > 0) {
             var seo = document.getElementById('seo-landing');
             if (seo) seo.style.display = 'none';
-            var articles = document.getElementById('seo-articles');
-            if (articles) articles.style.display = 'none';
+            // Articles stay visible — hidden only when user clicks a button or starts searching
             observer.disconnect();
+
+            // Hide articles when user scrolls back up to interact with the app
+            var articles = document.getElementById('seo-articles');
+            if (articles) {
+              var appInteracted = false;
+              root.addEventListener('click', function() {
+                if (!appInteracted) {
+                  appInteracted = true;
+                  articles.style.display = 'none';
+                }
+              }, { once: true });
+            }
           }
         });
         observer.observe(document.getElementById('root'), { childList: true, subtree: false });
