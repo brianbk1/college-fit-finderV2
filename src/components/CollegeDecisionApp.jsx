@@ -32,6 +32,78 @@ const CollegeImage = ({ name }) => {
 }
 
 // ─── PILL MULTI-SELECT (mobile-friendly toggle buttons) ───────
+const US_STATES = [
+  'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware',
+  'Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky',
+  'Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi',
+  'Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico',
+  'New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania',
+  'Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont',
+  'Virginia','Washington','West Virginia','Wisconsin','Wyoming'
+]
+
+const StateSelector = ({ values, onChange }) => {
+  const [open, setOpen] = React.useState(false)
+  const [filter, setFilter] = React.useState('')
+  const selected = values.selectedStates || []
+  const filtered = US_STATES.filter(s => s.toLowerCase().includes(filter.toLowerCase()))
+  const toggle = (state) => {
+    const next = selected.includes(state) ? selected.filter(s => s !== state) : [...selected, state]
+    onChange('selectedStates', next)
+  }
+  const removeState = (state) => onChange('selectedStates', selected.filter(s => s !== state))
+  const clearAll = () => { onChange('selectedStates', []); setOpen(false) }
+  return (
+    <div style={{ marginBottom: '20px', position: 'relative' }}>
+      <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', display: 'block', marginBottom: '10px' }}>
+        States (select all that apply)
+      </label>
+      {selected.length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
+          {selected.map(s => (
+            <span key={s} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#1E3A5F', color: 'white', borderRadius: '16px', padding: '4px 10px', fontSize: '12px', fontWeight: 'bold' }}>
+              {s}
+              <button onClick={() => removeState(s)} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', fontSize: '14px', lineHeight: 1, padding: 0 }}>×</button>
+            </span>
+          ))}
+          <button onClick={clearAll} style={{ fontSize: '11px', color: '#5C7A9F', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Clear all</button>
+        </div>
+      )}
+      <button onClick={() => setOpen(o => !o)} style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '2px solid #C8D6EC', background: 'white', color: '#1E3A5F', fontSize: '13px', textAlign: 'left', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span>{selected.length === 0 ? 'Any state' : `${selected.length} state${selected.length > 1 ? 's' : ''} selected`}</span>
+        <span>{open ? '▲' : '▼'}</span>
+      </button>
+      {open && (
+        <div style={{ position: 'absolute', zIndex: 100, top: '100%', left: 0, right: 0, background: 'white', border: '2px solid #C8D6EC', borderRadius: '8px', boxShadow: '0 4px 16px rgba(0,0,0,0.12)', marginTop: '4px' }}>
+          <div style={{ padding: '8px' }}>
+            <input
+              autoFocus
+              placeholder="Search states..."
+              value={filter}
+              onChange={e => setFilter(e.target.value)}
+              style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #C8D6EC', fontSize: '13px', boxSizing: 'border-box' }}
+            />
+          </div>
+          <div style={{ maxHeight: '220px', overflowY: 'auto', padding: '4px 8px 8px' }}>
+            {filtered.map(state => (
+              <div key={state} onClick={() => toggle(state)} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 10px', borderRadius: '6px', cursor: 'pointer', background: selected.includes(state) ? '#EEF3FB' : 'transparent' }}>
+                <span style={{ width: '18px', height: '18px', borderRadius: '4px', border: `2px solid ${selected.includes(state) ? '#1E3A5F' : '#C8D6EC'}`, background: selected.includes(state) ? '#1E3A5F' : 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  {selected.includes(state) && <span style={{ color: 'white', fontSize: '12px', lineHeight: 1 }}>✓</span>}
+                </span>
+                <span style={{ fontSize: '13px', color: '#1E3A5F' }}>{state}</span>
+              </div>
+            ))}
+            {filtered.length === 0 && <p style={{ color: '#5C7A9F', fontSize: '13px', textAlign: 'center', padding: '12px' }}>No states match</p>}
+          </div>
+          <div style={{ borderTop: '1px solid #C8D6EC', padding: '8px', textAlign: 'right' }}>
+            <button onClick={() => setOpen(false)} style={{ padding: '6px 16px', borderRadius: '6px', background: '#1E3A5F', color: 'white', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 'bold' }}>Done</button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 const PillSelect = ({ label, valueKey, options, values, onChange }) => {
   const selected = values[valueKey] || []
   const toggle = (opt) => {
@@ -172,7 +244,7 @@ const CollegeDecisionApp = () => {
     netAnnualCostMin: 0, netAnnualCostMax: 80000,
     totalCostMin: 0, totalCostMax: 300000,
     // location
-    distanceMin: 0, distanceMax: 3000,
+    distanceMin: 0, distanceMax: 3000, selectedStates: [],
     settingTypes: [],
     weatherTypes: [],
     beachAccess: false, mountainAccess: false, lakeAccess: false,
@@ -267,6 +339,7 @@ const CollegeDecisionApp = () => {
     if (p.netAnnualCostMax < 80000) tags.push(`💰 Cost $${p.netAnnualCostMin.toLocaleString()}–$${p.netAnnualCostMax.toLocaleString()}/yr${badge('cost')}`)
     if (p.totalCostMax < 300000) tags.push(`💰 4-yr $${p.totalCostMin.toLocaleString()}–$${p.totalCostMax.toLocaleString()}${badge('totalCost')}`)
     if (homeLocation) tags.push(`📍 ${p.distanceMin}–${p.distanceMax} mi of ${homeLocation.zip}${badge('distance')}`)
+    if (p.selectedStates.length > 0) tags.push(`🗺️ ${p.selectedStates.join(', ')}${badge('states')}`)
     if (p.settingTypes.length) tags.push(`🏙️ ${p.settingTypes.join(', ')}${badge('setting')}`)
     if (p.weatherTypes.length) tags.push(`🌤️ ${p.weatherTypes.join(', ')}${badge('weather')}`)
     if (p.beachAccess) tags.push(`🏖️ Beach access${badge('outdoorAccess')}`)
@@ -299,6 +372,7 @@ const CollegeDecisionApp = () => {
     if (p.netAnnualCostMax < 80000) criteria.push(`Annual net cost between $${p.netAnnualCostMin.toLocaleString()} and $${p.netAnnualCostMax.toLocaleString()}${w('cost')}`)
     if (p.totalCostMax < 300000) criteria.push(`Total 4-year cost between $${p.totalCostMin.toLocaleString()} and $${p.totalCostMax.toLocaleString()}${w('totalCost')}`)
     if (homeLocation) criteria.push(`Between ${p.distanceMin} and ${p.distanceMax} miles from zip code ${homeLocation.zip}${w('distance')}`)
+    if (p.selectedStates.length > 0) criteria.push(`Located in one of these states: ${p.selectedStates.join(', ')}${w('states')}`)
     if (p.settingTypes.length) criteria.push(`Setting preference: ${p.settingTypes.join(' or ')}${w('setting')}`)
     if (p.weatherTypes.length) criteria.push(`Climate preference: ${p.weatherTypes.join(' or ')}${w('weather')}`)
     if (p.beachAccess) criteria.push(`Beach or coastal access within 30-45 minutes${w('beachAccess')}`)
@@ -325,6 +399,7 @@ const CollegeDecisionApp = () => {
     if (p.netAnnualCostMax < 80000 && (importance['cost'] === 'Must Have')) hardFilters.push(`Annual net cost MUST be under $${p.netAnnualCostMax.toLocaleString()} — exclude any college above this`)
     if (p.totalCostMax < 300000 && (importance['totalCost'] === 'Must Have')) hardFilters.push(`Total 4-year cost MUST be under $${p.totalCostMax.toLocaleString()} — exclude any college above this`)
     if (homeLocation && (importance['distance'] === 'Must Have')) hardFilters.push(`MUST be within ${p.distanceMax} miles of zip ${homeLocation.zip} — exclude any college outside this radius`)
+    if (p.selectedStates.length > 0 && importance['states'] === 'Must Have') hardFilters.push(`MUST be located in one of these states: ${p.selectedStates.join(', ')} — exclude any college in a different state`)
     if (p.campusSizeMax < 50000 && (importance['campusSize'] === 'Must Have')) hardFilters.push(`Enrollment MUST be under ${p.campusSizeMax.toLocaleString()} students — exclude larger schools`)
     if (p.majorNeeded && (importance['major'] === 'Must Have')) hardFilters.push(`MUST offer strong programs in ${p.majorNeeded} — exclude schools without this`)
     if (p.acceptanceRateMax < 100 && (importance['selectivity'] === 'Must Have')) hardFilters.push(`Acceptance rate MUST be between ${p.acceptanceRateMin}% and ${p.acceptanceRateMax}%`)
@@ -634,6 +709,8 @@ Each object must have exactly these fields:
                   <SectionHeader emoji="📍" title="Location & Environment" />
                   <MinMaxInput label="Distance from Home" minKey="distanceMin" maxKey="distanceMax" suffix="miles" placeholder_min="0" placeholder_max="3000" values={p} onChange={handleP} />
                   <ImportanceSelector paramKey="distance" importance={importance} onChange={handleImportance} />
+                  <StateSelector values={p} onChange={handleP} />
+                  {p.selectedStates.length > 0 && <ImportanceSelector paramKey="states" importance={importance} onChange={handleImportance} />}
                   <PillSelect label="Campus Setting (select all that apply)" valueKey="settingTypes" options={['City', 'Suburban', 'College Town', 'Rural']} values={p} onChange={handleP} />
                   <ImportanceSelector paramKey="setting" importance={importance} onChange={handleImportance} />
                   <PillSelect label="Climate Preference (select all that apply)" valueKey="weatherTypes" options={['Cold/Snowy', 'Mild/Temperate', 'Warm/Hot']} values={p} onChange={handleP} />
