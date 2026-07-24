@@ -961,8 +961,44 @@ Each object must have exactly these fields:
                 </a>
               ))}
             </div>
+
+            <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1E3A5F', margin: '24px 0 16px' }}>📖 Our College Guides</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {[
+                { href: '/guides/college-application-timeline.html', emoji: '🗓️', title: 'Application Timeline', desc: 'Month-by-month, junior fall through senior spring' },
+                { href: '/guides/financial-aid-explained.html', emoji: '💰', title: 'Financial Aid, Explained', desc: 'FAFSA, net price, and comparing offers fairly' },
+                { href: '/guides/campus-visit-guide.html', emoji: '🏛️', title: 'The Campus Visit Guide', desc: "What to look for beyond the official tour" },
+              ].map(r => (
+                <a key={r.href} href={r.href} style={{ background: 'white', padding: '16px', borderRadius: '12px', border: '1px solid #C8D6EC', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '14px', boxShadow: '0 1px 4px rgba(30,58,95,0.06)' }}>
+                  <span style={{ fontSize: '28px' }}>{r.emoji}</span>
+                  <div>
+                    <p style={{ fontWeight: 'bold', color: '#1E3A5F', margin: '0 0 2px', fontSize: '14px' }}>{r.title}</p>
+                    <p style={{ color: '#5C7A9F', fontSize: '12px', margin: 0 }}>{r.desc}</p>
+                  </div>
+                  <span style={{ marginLeft: 'auto', color: '#E8650A', fontSize: '18px' }}>→</span>
+                </a>
+              ))}
+            </div>
           </div>
         )}
+      </div>
+
+      {/* Site footer — reaches the static About/Contact/Privacy/Terms pages from every view */}
+      <div style={{ textAlign: 'center', padding: '28px 16px 20px', borderTop: '1px solid #E3E0D8', marginTop: 8 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '4px 16px', marginBottom: 8 }}>
+          {[
+            ['/guides/index.html', 'College Guides'],
+            ['/about.html', 'About'],
+            ['/contact.html', 'Contact'],
+            ['/privacy.html', 'Privacy'],
+            ['/terms.html', 'Terms'],
+          ].map(([href, label]) => (
+            <a key={href} href={href} style={{ fontSize: 12.5, color: '#1E3A5F', textDecoration: 'none' }}>{label}</a>
+          ))}
+        </div>
+        <p style={{ fontSize: 11.5, color: '#8896A6', margin: 0 }}>
+          College Fit Finder is a research starting point, not a guarantee of admission.
+        </p>
       </div>
     </div>
   )
