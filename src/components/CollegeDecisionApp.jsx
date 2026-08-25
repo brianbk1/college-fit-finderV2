@@ -143,6 +143,45 @@ const ToggleChip = ({ label, emoji, valueKey, values, onChange }) => {
   )
 }
 
+// ─── PLACE PROXIMITY ──────────────────────────────────────────
+// A toggle for "I want this place nearby" + a max-distance selector.
+const PlaceProximity = ({ label, emoji, activeKey, distanceKey, values, onChange }) => {
+  const active = values[activeKey]
+  const distance = values[distanceKey] || 15
+  const distanceOptions = [5, 10, 15, 25, 50]
+  return (
+    <div style={{ marginBottom: '12px', background: active ? '#FFF8F2' : 'white', border: `2px solid ${active ? '#E8650A' : '#C8D6EC'}`, borderRadius: '10px', padding: '12px', transition: 'all 0.15s' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+        <button onClick={() => onChange(activeKey, !active)} style={{
+          display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none',
+          cursor: 'pointer', fontSize: '14px', fontWeight: active ? 'bold' : 'normal', color: '#1E3A5F', padding: 0, flex: 1, textAlign: 'left'
+        }}>
+          <span style={{ fontSize: '18px' }}>{emoji}</span>
+          <span>{label}</span>
+        </button>
+        <div style={{
+          width: '38px', height: '22px', borderRadius: '11px', background: active ? '#E8650A' : '#C8D6EC',
+          position: 'relative', cursor: 'pointer', flexShrink: 0, transition: 'background 0.15s'
+        }} onClick={() => onChange(activeKey, !active)}>
+          <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'white', position: 'absolute', top: '3px', left: active ? '19px' : '3px', transition: 'left 0.15s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+        </div>
+      </div>
+      {active && (
+        <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '12px', color: '#5C7A9F', fontWeight: 'bold' }}>Within:</span>
+          {distanceOptions.map(d => (
+            <button key={d} onClick={() => onChange(distanceKey, d)} style={{
+              padding: '4px 12px', borderRadius: '14px', fontSize: '12px', fontWeight: distance === d ? 'bold' : 'normal',
+              background: distance === d ? '#1E3A5F' : 'white', color: distance === d ? 'white' : '#5C7A9F',
+              border: `1.5px solid ${distance === d ? '#1E3A5F' : '#C8D6EC'}`, cursor: 'pointer', whiteSpace: 'nowrap'
+            }}>{d} mi</button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── MIN/MAX INPUT ────────────────────────────────────────────
 const MinMaxInput = ({ label, minKey, maxKey, prefix = '', suffix = '', placeholder_min, placeholder_max, values, onChange }) => {
   const handleChange = (key, raw) => {
@@ -248,6 +287,11 @@ const CollegeDecisionApp = () => {
     settingTypes: [],
     weatherTypes: [],
     beachAccess: false, mountainAccess: false, lakeAccess: false,
+    // favorite places nearby
+    targetNearby: false, targetDistance: 15,
+    chickfilaNearby: false, chickfilaDistance: 15,
+    starbucksNearby: false, starbucksDistance: 15,
+    otherPlaces: '',
     // campus life
     campusSizeMin: 0, campusSizeMax: 50000,
     avgClassSizeMin: 5, avgClassSizeMax: 500,
@@ -345,6 +389,10 @@ const CollegeDecisionApp = () => {
     if (p.beachAccess) tags.push(`🏖️ Beach access${badge('outdoorAccess')}`)
     if (p.mountainAccess) tags.push(`⛷️ Mountains${badge('outdoorAccess')}`)
     if (p.lakeAccess) tags.push(`🏞️ Lake/water${badge('outdoorAccess')}`)
+    if (p.targetNearby) tags.push(`🎯 Target ≤${p.targetDistance} mi${badge('favoritePlaces')}`)
+    if (p.chickfilaNearby) tags.push(`🐔 Chick-fil-A ≤${p.chickfilaDistance} mi${badge('favoritePlaces')}`)
+    if (p.starbucksNearby) tags.push(`☕ Starbucks ≤${p.starbucksDistance} mi${badge('favoritePlaces')}`)
+    if (p.otherPlaces.trim()) tags.push(`📌 ${p.otherPlaces.trim()}${badge('favoritePlaces')}`)
     if (p.campusSizeMax < 50000) tags.push(`🏫 ${p.campusSizeMin.toLocaleString()}–${p.campusSizeMax.toLocaleString()} students${badge('campusSize')}`)
     if (p.avgClassSizeMax < 500) tags.push(`📖 Class size ${p.avgClassSizeMin}–${p.avgClassSizeMax}${badge('classSize')}`)
     if (p.recreationCenter) tags.push(`🏊 Rec center${badge('recreationCenter')}`)
@@ -378,6 +426,10 @@ const CollegeDecisionApp = () => {
     if (p.beachAccess) criteria.push(`Beach or coastal access within 30-45 minutes${w('beachAccess')}`)
     if (p.mountainAccess) criteria.push(`Mountain or skiing access nearby${w('mountainAccess')}`)
     if (p.lakeAccess) criteria.push(`Lake or water access nearby${w('lakeAccess')}`)
+    if (p.targetNearby) criteria.push(`A Target store within ${p.targetDistance} miles of campus${w('favoritePlaces')}`)
+    if (p.chickfilaNearby) criteria.push(`A Chick-fil-A within ${p.chickfilaDistance} miles of campus${w('favoritePlaces')}`)
+    if (p.starbucksNearby) criteria.push(`A Starbucks within ${p.starbucksDistance} miles of campus${w('favoritePlaces')}`)
+    if (p.otherPlaces.trim()) criteria.push(`These specific places/stores/restaurants near campus: ${p.otherPlaces.trim()}${w('favoritePlaces')}`)
     if (p.campusSizeMax < 50000) criteria.push(`Undergraduate enrollment between ${p.campusSizeMin.toLocaleString()} and ${p.campusSizeMax.toLocaleString()}${w('campusSize')}`)
     if (p.avgClassSizeMax < 500) criteria.push(`Average class size between ${p.avgClassSizeMin} and ${p.avgClassSizeMax} students${w('classSize')}`)
     if (p.carOnCampus.length) criteria.push(`Freshman car policy: ${p.carOnCampus.join(' or ')}${w('carOnCampus')}`)
@@ -403,6 +455,14 @@ const CollegeDecisionApp = () => {
     if (p.campusSizeMax < 50000 && (importance['campusSize'] === 'Must Have')) hardFilters.push(`Enrollment MUST be under ${p.campusSizeMax.toLocaleString()} students — exclude larger schools`)
     if (p.majorNeeded && (importance['major'] === 'Must Have')) hardFilters.push(`MUST offer strong programs in ${p.majorNeeded} — exclude schools without this`)
     if (p.acceptanceRateMax < 100 && (importance['selectivity'] === 'Must Have')) hardFilters.push(`Acceptance rate MUST be between ${p.acceptanceRateMin}% and ${p.acceptanceRateMax}%`)
+    if (importance['favoritePlaces'] === 'Must Have') {
+      const placeReqs = []
+      if (p.targetNearby) placeReqs.push(`a Target within ${p.targetDistance} miles`)
+      if (p.chickfilaNearby) placeReqs.push(`a Chick-fil-A within ${p.chickfilaDistance} miles`)
+      if (p.starbucksNearby) placeReqs.push(`a Starbucks within ${p.starbucksDistance} miles`)
+      if (p.otherPlaces.trim()) placeReqs.push(`the following nearby: ${p.otherPlaces.trim()}`)
+      if (placeReqs.length) hardFilters.push(`Campus MUST have ${placeReqs.join(' AND ')} — exclude colleges that don't`)
+    }
 
     const hardFilterClause = hardFilters.length > 0
       ? `\n\nHARD REQUIREMENTS — exclude any college that does not meet ALL of these:\n${hardFilters.map(f => `❌ ${f}`).join('\n')}\n`
@@ -416,11 +476,20 @@ const CollegeDecisionApp = () => {
       ? `\nDISTANCE: Only include colleges within ${p.distanceMax} miles of zip code ${homeLocation.zip}. Verify each college's actual distance before including it. Do not estimate — if unsure, exclude it.`
       : ''
 
+    const wantsPlaces = p.targetNearby || p.chickfilaNearby || p.starbucksNearby || p.otherPlaces.trim()
+    const placesList = [
+      p.targetNearby && 'Target', p.chickfilaNearby && 'Chick-fil-A', p.starbucksNearby && 'Starbucks',
+      p.otherPlaces.trim() && p.otherPlaces.trim()
+    ].filter(Boolean).join(', ')
+    const placesClause = wantsPlaces
+      ? `\nFAVORITE PLACES: The student wants these near campus: ${placesList}. For each college you return, fill the "nearbyPlaces" field with the approximate driving distance from campus to each of these (e.g. "Target 4 mi, Chick-fil-A 2 mi, Starbucks on campus"). Be honest — if one isn't nearby, say so (e.g. "nearest Target 30+ mi"). Favor colleges where these are genuinely close.`
+      : ''
+
     return `You are a college counselor helping a student find colleges. Find exactly ${count} U.S. colleges that genuinely match these preferences.
 ${hardFilterClause}
 PREFERENCES (ranked by importance):
 ${criteria.length > 0 ? criteria.map(c => `• ${c}`).join('\n') : '• No specific criteria - recommend well-rounded colleges'}
-${distanceClause}${excludeClause}
+${distanceClause}${placesClause}${excludeClause}
 IMPORTANT: The annualCost field in your JSON must reflect the realistic NET cost after average financial aid — not sticker price. If a college's realistic net cost exceeds the student's max budget, do not include it.
 
 Respond ONLY with a valid JSON array. No markdown, no explanation, just the raw JSON array.
@@ -438,6 +507,7 @@ Each object must have exactly these fields:
   "greekLife": "Moderate Greek presence",
   "sportsCulture": "High - Division I athletics",
   "nearbyAttractions": "30 min to beach, hiking trails nearby",
+  "nearbyPlaces": "Target 3 mi, Chick-fil-A 1 mi, Starbucks on campus",
   "topPrograms": "Business, Engineering, Communications",
   "fitSummary": "2-3 sentence explanation of why this college matches the student's specific criteria",
   "whyItFits": ["reason 1 tied to their criteria", "reason 2", "reason 3"],
@@ -549,7 +619,7 @@ Each object must have exactly these fields:
         website: c.website || '#', enrollment: c.enrollment || null, acceptanceRate: c.acceptanceRate || null,
         annualCost: c.annualCost || null, setting: c.setting || '', weather: c.weather || '',
         greekLife: c.greekLife || '', sportsCulture: c.sportsCulture || '',
-        nearbyAttractions: c.nearbyAttractions || '', topPrograms: c.topPrograms || '',
+        nearbyAttractions: c.nearbyAttractions || '', nearbyPlaces: c.nearbyPlaces || '', topPrograms: c.topPrograms || '',
         bio: c.fitSummary || '', whyItFits: c.whyItFits || [],
         lat: c.lat || null, lng: c.lng || null,
       }))
@@ -562,8 +632,8 @@ Each object must have exactly these fields:
   const isSaved = (id) => !!savedColleges.find(c => c.id === id)
 
   const exportToCSV = (list) => {
-    const headers = ['College Name', 'City', 'State', 'Website', 'Enrollment', 'Acceptance Rate', 'Est. Annual Cost', 'Setting', 'Top Programs', 'Fit Summary']
-    const rows = list.map(c => [c.name, c.city, c.state, c.website, c.enrollment || '', c.acceptanceRate ? c.acceptanceRate + '%' : '', c.annualCost ? '$' + c.annualCost.toLocaleString() : '', c.setting, c.topPrograms, (c.bio || '').replace(/"/g, '""')])
+    const headers = ['College Name', 'City', 'State', 'Website', 'Enrollment', 'Acceptance Rate', 'Est. Annual Cost', 'Setting', 'Top Programs', 'Favorite Spots Nearby', 'Fit Summary']
+    const rows = list.map(c => [c.name, c.city, c.state, c.website, c.enrollment || '', c.acceptanceRate ? c.acceptanceRate + '%' : '', c.annualCost ? '$' + c.annualCost.toLocaleString() : '', c.setting, c.topPrograms, c.nearbyPlaces || '', (c.bio || '').replace(/"/g, '""')])
     const csvContent = [headers.join(','), ...rows.map(r => r.map(cell => `"${cell}"`).join(','))].join('\n')
     const link = document.createElement('a')
     link.setAttribute('href', URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })))
@@ -607,6 +677,7 @@ Each object must have exactly these fields:
       <div style={{ padding: '12px 16px', borderBottom: '1px solid #EDF1FA', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {college.topPrograms && <p style={{ fontSize: '13px', color: '#1E3A5F', margin: 0 }}><strong>📚 Programs:</strong> {college.topPrograms}</p>}
         {college.nearbyAttractions && <p style={{ fontSize: '13px', color: '#1E3A5F', margin: 0 }}><strong>🗺️ Nearby:</strong> {college.nearbyAttractions}</p>}
+        {college.nearbyPlaces && <p style={{ fontSize: '13px', color: '#1E3A5F', margin: 0 }}><strong>📌 Favorite spots:</strong> {college.nearbyPlaces}</p>}
         {college.sportsCulture && <p style={{ fontSize: '13px', color: '#1E3A5F', margin: 0 }}><strong>🏈 Sports:</strong> {college.sportsCulture}</p>}
         {college.greekLife && <p style={{ fontSize: '13px', color: '#1E3A5F', margin: 0 }}><strong>🏛️ Greek Life:</strong> {college.greekLife}</p>}
       </div>
@@ -724,6 +795,22 @@ Each object must have exactly these fields:
                     </div>
                     {(p.beachAccess || p.mountainAccess || p.lakeAccess) && <ImportanceSelector paramKey="outdoorAccess" importance={importance} onChange={handleImportance} />}
                   </div>
+
+                  <SectionHeader emoji="📌" title="Favorite Places Nearby" />
+                  <p style={{ fontSize: '12px', color: '#5C7A9F', margin: '-8px 0 14px', lineHeight: 1.5 }}>
+                    Toggle the spots you want close to campus and set how far you're willing to go.
+                  </p>
+                  <PlaceProximity label="Target" emoji="🎯" activeKey="targetNearby" distanceKey="targetDistance" values={p} onChange={handleP} />
+                  <PlaceProximity label="Chick-fil-A" emoji="🐔" activeKey="chickfilaNearby" distanceKey="chickfilaDistance" values={p} onChange={handleP} />
+                  <PlaceProximity label="Starbucks" emoji="☕" activeKey="starbucksNearby" distanceKey="starbucksDistance" values={p} onChange={handleP} />
+                  <div style={{ marginTop: '14px', marginBottom: '4px' }}>
+                    <label style={{ fontWeight: 'bold', color: '#1E3A5F', fontSize: '13px', display: 'block', marginBottom: '8px' }}>Other places you'd want nearby</label>
+                    <input type="text" value={p.otherPlaces} onChange={e => handleP('otherPlaces', e.target.value)}
+                      placeholder="e.g. Trader Joe's, In-N-Out, a major airport, Whole Foods"
+                      style={{ width: '100%', padding: '12px 14px', borderRadius: '8px', border: '2px solid #C8D6EC', boxSizing: 'border-box', color: '#1E3A5F', fontSize: '14px', outline: 'none' }} />
+                    <p style={{ fontSize: '11px', color: '#9BB0C8', margin: '6px 0 0' }}>Separate multiple with commas.</p>
+                  </div>
+                  {(p.targetNearby || p.chickfilaNearby || p.starbucksNearby || p.otherPlaces.trim()) && <ImportanceSelector paramKey="favoritePlaces" importance={importance} onChange={handleImportance} />}
 
                   <SectionHeader emoji="🏫" title="Campus Life" />
                   <MinMaxInput label="Campus Size" minKey="campusSizeMin" maxKey="campusSizeMax" suffix="students" placeholder_min="0" placeholder_max="50000" values={p} onChange={handleP} />
