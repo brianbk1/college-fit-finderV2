@@ -6,6 +6,7 @@ function App() {
     <>
       <CollegeDecisionApp />
       <footer style={{ marginTop: 48, padding: '24px 16px', borderTop: '1px solid #E3E0D8', textAlign: 'center', fontSize: 13, color: '#5C6B7A' }}>
+        <a href="/blog/index.html" style={{ color: '#1E3A5F', margin: '0 10px' }}>Blog</a>
         <a href="/guides/index.html" style={{ color: '#1E3A5F', margin: '0 10px' }}>College Guides</a>
         <a href="/about.html" style={{ color: '#1E3A5F', margin: '0 10px' }}>About</a>
         <a href="/contact.html" style={{ color: '#1E3A5F', margin: '0 10px' }}>Contact</a>

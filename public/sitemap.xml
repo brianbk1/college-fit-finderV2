@@ -13,6 +13,18 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.searchcolleges.ai/blog/index.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.searchcolleges.ai/blog/welcome-to-the-blog.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.searchcolleges.ai/guides/college-application-timeline.html</loc>
     <lastmod>2026-07-14</lastmod>
     <changefreq>monthly</changefreq>
