@@ -1,69 +1,34 @@
-# College Fit Finder - Plain React Version
+# searchcolleges.ai — blog index + sitemap update
 
-This is a converted Plain React version (no Next.js complexity).
+Your sitemap listed three blog posts, but the deployed blog index only showed one.
+These two files bring the index in sync and tidy the sitemap.
 
-## Quick Start
+## Replace these two files
 
-### 1. Extract the folder
-Extract this folder to: `C:\Users\brian\Documents\Github\college-fit-finder-react`
+| File in this zip | Put it at (site root) | Action |
+|---|---|---|
+| `blog/index.html` | `/blog/index.html` | **Replace** |
+| `sitemap.xml`     | `/sitemap.xml`      | **Replace** |
 
-### 2. Install dependencies
-Open Command Prompt in this folder and run:
-```
-npm install
-```
+## What changed
 
-### 3. Test locally (optional)
-```
-npm start
-```
-Opens at http://localhost:3000
+**blog/index.html** — now lists all three posts, newest-first:
+1. The September Senior Checklist: 58 Days to November 1  (Sep 4)
+2. The College Search Is Changing: 3 Trends Families Should Watch This Fall  (existing card, unchanged)
+3. Welcome to the Blog  (Aug 25)
 
-### 4. Deploy to Netlify
+**sitemap.xml** — kept every existing URL and date; two edits only:
+- `/blog/index.html` `lastmod` bumped to 2026-09-09 (the index changed today).
+- Added `/terms.html` — your nav and footer link to it, but it was missing from the sitemap.
 
-**Easiest Option:**
+## ⚠️ Confirm two blurbs
+I only had the actual copy for the "3 Trends" post. For the other two I inferred the
+title and one-line blurb from the filename + sitemap date (they're marked with
+`<!-- TODO -->` comments in the HTML):
+- **september-senior-checklist-58-days-to-november-1** — headline + blurb are a best guess.
+- **welcome-to-the-blog** — same.
 
-1. Go to https://app.netlify.com
-2. Click "Add new site" → "Import an existing project"
-3. Click "GitHub"
-4. Find and select `college-fit-finder-react` repository
-5. Keep all settings default
-6. Click "Deploy site"
-7. Wait 2-3 minutes
-8. Your app is live!
-
-**Alternative - Using Command Line:**
-
-```
-npm install -g netlify-cli
-netlify login
-netlify deploy --prod --dir=build
-```
-
-## What Changed
-
-- Removed Next.js (complex routing)
-- Using plain Create React App (simple and reliable)
-- All your features still work exactly the same
-- Much simpler deployment process
-
-## Features Still Included
-
-✅ Discover colleges
-✅ Add and rate colleges
-✅ Compare schools
-✅ Reflect on fit
-✅ Export to CSV
-✅ Resource links (FAFSA, Scholarships, etc.)
-
-## Troubleshooting
-
-If deployment fails, check:
-1. You've run `npm install` 
-2. Node.js is installed (`node --version`)
-3. Git is installed (`git --version`)
-4. Repository is connected to GitHub
-
-## Support
-
-This version removes all Next.js configuration issues and should deploy cleanly to any React-compatible host.
+Open those two posts, and if the real headline or summary differs, paste it into the
+matching card. Or send me the two HTML files and I'll drop in the exact copy. Also: the
+first card's kicker reads "Admissions · Checklist" (no read-time) since I didn't know it —
+add "· N min read" if you want it to match the other cards exactly.

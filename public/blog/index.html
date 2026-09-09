@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blog — College Search Tips, News & Advice | searchcolleges.ai</title>
-<meta name="description" content="Weekly writing on the college search: admissions trends, financial aid, campus life, and how to find the college that actually fits you.">
+<title>Blog | searchcolleges.ai</title>
+<meta name="description" content="The College Fit Finder blog: plain-English guidance on admissions, financial aid, and finding the college that actually fits.">
 <link rel="canonical" href="https://www.searchcolleges.ai/blog/index.html">
-<meta property="og:title" content="The College Fit Finder Blog">
-<meta property="og:description" content="Weekly writing on the college search: admissions, financial aid, campus life, and finding the right fit.">
+<meta property="og:title" content="Blog | searchcolleges.ai">
+<meta property="og:description" content="Plain-English guidance on admissions, financial aid, and finding the college that actually fits.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.searchcolleges.ai/blog/index.html">
 <style>
@@ -20,18 +20,17 @@
   nav a{color:#CBD8E8;text-decoration:none;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;margin-right:18px}
   nav a:hover{color:#fff;text-decoration:underline}
   main{max-width:760px;margin:0 auto;padding:48px 24px 72px}
-  h1{font-size:34px;color:var(--navy);line-height:1.2;margin-bottom:12px}
-  .lede{color:var(--muted);margin-bottom:36px;font-size:18px}
-  .post{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:26px;margin-bottom:20px}
-  .post .meta{font-family:-apple-system,'Segoe UI',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);font-weight:700;margin-bottom:8px}
-  .post .meta .date{color:var(--muted);font-weight:600}
-  .post h2{font-size:22px;line-height:1.3;margin-bottom:10px}
+  .pagetitle{font-size:32px;color:var(--navy);line-height:1.25;margin-bottom:10px}
+  .lede{color:var(--muted);margin-bottom:38px;font-size:18px}
+  .post{border-top:1px solid var(--rule);padding:26px 0}
+  .post:first-of-type{border-top:none;padding-top:0}
+  .kicker{font-family:-apple-system,'Segoe UI',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);font-weight:700;margin-bottom:8px}
+  .post h2{font-size:24px;color:var(--navy);line-height:1.3;margin-bottom:10px}
   .post h2 a{color:var(--navy);text-decoration:none}
   .post h2 a:hover{text-decoration:underline}
   .post p{margin-bottom:12px}
-  .post .read{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;font-weight:600}
-  .empty{background:#fff;border:1px dashed var(--rule);border-radius:8px;padding:40px 26px;text-align:center;color:var(--muted)}
-  a{color:var(--navy)}
+  .readmore{font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;font-weight:700;color:var(--accent);text-decoration:none}
+  .readmore:hover{text-decoration:underline}
   footer{border-top:1px solid var(--rule);margin-top:24px;padding:28px 24px;text-align:center;font-family:-apple-system,'Segoe UI',sans-serif;font-size:13px;color:var(--muted)}
   footer a{color:var(--navy);text-decoration:none;margin:0 10px}
 </style>
@@ -48,77 +47,23 @@
   <a href="/terms.html">Terms</a>
 </nav>
 <main>
-  <h1>The College Fit Finder Blog</h1>
-  <p class="lede">Weekly notes on the college search — admissions trends, paying for school, campus life, and finding a college that actually fits.</p>
+  <h1 class="pagetitle">Blog</h1>
+  <p class="lede">Plain-English guidance on admissions, financial aid, and finding the college that actually fits.</p>
 
-  <div id="post-list"></div>
+  <!-- ===== POST CARDS (newest first). Add new posts directly below this line. ===== -->
+
+  <article class="post">
+    <div class="kicker">Admissions · 4 min read</div>
+    <h2><a href="/blog/college-search-trends-fall-2027.html">The College Search Is Changing: 3 Trends Families Should Watch This Fall</a></h2>
+    <p>An earlier FAFSA, the rise of direct admissions, and three-year bachelor&rsquo;s degrees — three developments reshaping the college search for the fall 2027 cycle.</p>
+    <a class="readmore" href="/blog/college-search-trends-fall-2027.html">Read more →</a>
+  </article>
+
+  <!-- ===== END POST CARDS ===== -->
 </main>
 <footer>
   <a href="/">Home</a> · <a href="/blog/index.html">Blog</a> · <a href="/guides/index.html">Guides</a> · <a href="/about.html">About</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms</a>
   <p style="margin-top:10px">© 2026 College Fit Finder · searchcolleges.ai</p>
 </footer>
-
-<!-- ============================================================= -->
-<!--  ADD A NEW POST HERE — copy one { } block, paste it at the     -->
-<!--  TOP of the list, and fill it in. Newest posts sort first      -->
-<!--  automatically by date, so order in the file doesn't matter.   -->
-<!--                                                                 -->
-<!--  slug     = the filename WITHOUT ".html" (e.g. blog/my-post)   -->
-<!--  date     = "YYYY-MM-DD"                                        -->
-<!--  category = short label shown in gold (e.g. "Admissions")      -->
-<!--  readMins = rough reading time in minutes                      -->
-<!--  excerpt  = 1-2 sentence teaser                                -->
-<!-- ============================================================= -->
-<script>
-const POSTS = [
-  {
-    slug: "september-senior-checklist-58-days-to-november-1",
-    title: "58 Days to November 1: The September Checklist for College-Bound Seniors",
-    date: "2026-09-04",
-    category: "Admissions",
-    readMins: 5,
-    excerpt: "Senior year just started and the first early deadline is 58 days away. Finalize the list, ask recommenders now, get FAFSA-ready for October 1, and decide — with a calculator in hand — whether Early Decision is right for you."
-  },
-  {
-    slug: "college-search-trends-fall-2027",
-    title: "The College Search Is Changing: 3 Trends Families Should Watch This Fall",
-    date: "2026-08-25",
-    category: "Admissions",
-    readMins: 4,
-    excerpt: "An earlier FAFSA, the rise of direct admissions, and three-year bachelor's degrees — three developments reshaping the fall 2027 college search."
-  },
-  {
-    slug: "welcome-to-the-blog",
-    title: "Welcome to the College Fit Finder Blog",
-    date: "2026-08-25",
-    category: "News",
-    readMins: 2,
-    excerpt: "Why we're starting a blog, what we'll write about each week, and how to get the most out of the college search this year."
-  },
-  // ← paste a new post object above this line
-];
-
-(function renderPosts() {
-  const list = document.getElementById('post-list');
-  if (!POSTS.length) {
-    list.innerHTML = '<div class="empty">New posts are on the way — check back soon.</div>';
-    return;
-  }
-  const sorted = [...POSTS].sort((a, b) => (a.date < b.date ? 1 : -1));
-  const fmtDate = (iso) => {
-    const [y, m, d] = iso.split('-').map(Number);
-    return new Date(y, m - 1, d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  };
-  const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  list.innerHTML = sorted.map(post => `
-    <article class="post">
-      <div class="meta">${esc(post.category)} · ${esc(fmtDate(post.date))}${post.readMins ? ` · ${post.readMins} min read` : ''}</div>
-      <h2><a href="/blog/${esc(post.slug)}.html">${esc(post.title)}</a></h2>
-      <p>${esc(post.excerpt)}</p>
-      <a class="read" href="/blog/${esc(post.slug)}.html">Read the post →</a>
-    </article>
-  `).join('');
-})();
-</script>
 </body>
 </html>
